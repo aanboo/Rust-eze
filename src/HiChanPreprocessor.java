@@ -10,7 +10,7 @@
 //Generate precision-5 geohashes for points along the line, not just the first coordinate. You must account for the areas between coordinate vertices too, so long segments do not leave gaps in the index.
 //For every geohash a segment intersects, write a row containing the geohash and the segment's attributes. Remove duplicate geohash/segment combinations. Use a CSV writer or correctly escape commas and quotation marks if writing CSV manually.
 //test one known segment first, then a few more. Verify that the CSV contains both states, that each row has a six-character geohash, and that GPS points along the highway can retrieve the expected candidate segments. Compare results against a small manually checked sample before processing the full dataset
-
+//
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -30,7 +30,7 @@ import java.util.Set;
  * Hi_Chan preprocessor (debugging version): converts the filtered NHPN JSON file
  * (a features collection of I-90 segments) into a flat CSV with one row per coordinate.
  *
- * CSV columns:
+ * CSV columns:S
  *   geohash,lat,lon,stfips,begmp,endmp,channel
  *
  * Each geohash appears only once: the first point found for a geohash is kept and every
