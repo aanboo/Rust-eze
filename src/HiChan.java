@@ -1,25 +1,32 @@
 /*HiChan Utility*/
 
-
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.Arrays;
 public class HiChan {
     public static void main(String[] args){
-        System.out.println("Hello welcome to the HiChan utility!");
-        HashMap<String,String[]> preproCSV = new HashMap<>();
-        preproCSV = Read_GPS_Log(args[0]);
-        System.out.println(preproCSV);
+        HashMap <String, String[]> preproCSV = Read_Preproc_CSV(args[0]);
+        System.out.println(Arrays.toString(preproCSV.get("c27uw")));
     }
-
-    public static HashMap<String, String[]> Read_GPS_Log(String arg1){
-        HashMap<String,String[]> milemarkers = new HashMap<>();
-        System.out.println("Running Read_Gps_Log input is: " + arg1);
-        //correctly open file, then read first/sec line, then for loop it
-
-        String line = "c2kz3 47.709889 -116.99399 ID 0 6.825 10";
-        String[] fields = line.split(",");
-
-        milemarkers.put(fields[0], fields);
-        return milemarkers;
+/*This function takes in the name of the csv file and parses it into a HashMap using the geohash as the key.
+* Ir returns the created hashmap with all of the values.*/
+    public static HashMap<String, String[]> Read_Preproc_CSV(String arg1){
+        HashMap<String,String[]> preproc_csv = new HashMap<>();
+        //Opens, reads and then converts the values in the CSV file into a hashMap.
+        Path pathToCSV = Path.of("src/"+arg1);
+        try(BufferedReader reader = Files.newBufferedReader(pathToCSV)){
+            String line;
+            while((line = reader.readLine()) != null){
+                String[] fields = line.split(",");
+                preproc_csv.put(fields[0], fields);
+            }
+        } catch(IOException e){
+            System.out.println("Error reading file: " + e.getMessage());
+        }
+        return preproc_csv;
     }
 }
 
