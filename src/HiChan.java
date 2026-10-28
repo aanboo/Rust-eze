@@ -6,8 +6,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Arrays;
-public class HiChan {
-    public static void main(String[] args){
+
+void main(String[] args){
         HashMap <String, String[]> preproCSV = Read_Preproc_CSV(args[0]);
         System.out.println(Arrays.toString(preproCSV.get("c27uw")));
     }
@@ -28,5 +28,4 @@ public class HiChan {
         }
         return preproc_csv;
     }
-}
 
