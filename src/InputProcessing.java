@@ -25,7 +25,7 @@ public class InputProcessing {
         fileExists(filePath);
         Map<String, List<HighwaySegment>> highwayIndex = new HashMap<>();
 
-        try(BufferedReader reader = new BufferedReader(new FileReader(filePath).trim)){
+        try(BufferedReader reader = new BufferedReader(new FileReader(filePath.trim()))){
             String header = reader.readLine();
             if(header == null){
                 throw new IOException("Error - Records cannot be read");
@@ -48,7 +48,7 @@ public class InputProcessing {
                     double lat = Double.parseDouble(tokens[1].trim());
                     double lon = Double.parseDouble(tokens[2].trim());
                     String sign1 = "I-90";
-                    String stFIPS = tokens[3].trim;
+                    String stFIPS = tokens[3].trim();
                     double begMP = Double.parseDouble(tokens[5].trim());
                     double endMP = Double.parseDouble(tokens[6].trim());
                     int channel;
