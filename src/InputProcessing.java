@@ -76,9 +76,9 @@ public class InputProcessing {
     }
 
     //date time,latitude,longitude,altitude(m),speed(m/s),sat_used
-    public  Map<String, List<GPSLogEntry>> readGPSLog(String filepath) throws IOException{
+    public  Map<String, List<GPSLogEntry>> readGPSLog(String filePath) throws IOException {
         fileExists(filePath);
-        Map<String, List<GPSLogEntry>> logEntry = new HashMap<>;
+        Map<String, List<GPSLogEntry>> logEntry = new HashMap<>();
 
         try(BufferedReader reader = new BufferedReader(new FileReader(filePath.trim()))){
             String header = reader.readLine();
@@ -101,15 +101,15 @@ public class InputProcessing {
                 }
 
                 try{
-                    String dateTime = tokens[0].trim();
+                    String date_time = tokens[0].trim();
                     double lat = Double.parseDouble(tokens[1].trim());
                     double lon = Double.parseDouble(tokens[2].trim());
                     int altitude = Integer.parseInt(tokens[3].trim());
                     int speed = Integer.parseInt(tokens[4].trim());
                     int sat_used = Integer.parseInt(tokens[5].trim());
                     //Add catch if there are more that 6 columns
-                    GPSLogEntry log = new GPSLogEntry(dateTime, lat, lon, altitude,speed,sat_used);
-                    //Add something to catch if there is an invalid or duplicate dateTime?
+                    GPSLogEntry log = new GPSLogEntry(date_time, lat, lon, altitude,speed,sat_used);
+                    //Add something to catch if there is an invalid or duplicate date_time?
                 } catch (NumberFormatException e){
                     throw new IllegalArgumentException("Error - Records cannot be parsed");
                 }
@@ -118,7 +118,7 @@ public class InputProcessing {
             throw new IOException("Error - Records cannot be read");
         }
 
-        return GPSLogEntry;
+        return logEntry;
 
     }
 }
