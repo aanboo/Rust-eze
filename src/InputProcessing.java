@@ -39,8 +39,10 @@ public class InputProcessing {
                 }
 
                 String[] tokens = line.split(",");
+                //6 should probably be turned into a global int because it will change once we get rid of
+                // the unecessary columns in the CSV.
                 if(tokens.length < 6){
-                    throw new IllegalArgumentException("Error - Reocrds cannot be parsed");
+                    throw new IllegalArgumentException("Error - Records cannot be parsed");
                 }
 
                 try{
@@ -52,7 +54,8 @@ public class InputProcessing {
                     double begMP = Double.parseDouble(tokens[5].trim());
                     double endMP = Double.parseDouble(tokens[6].trim());
                     int channel;
-
+                    //7 should probably be turned into a global int because it will change once we get rid of
+                    // the unecessary columns in the CSV. Intellij throws an error that this will always evaluate to true
                     if(tokens.length >= 7) {
                         channel = Integer.parseInt(tokens[6].trim());
                     }else{
@@ -71,4 +74,6 @@ public class InputProcessing {
 
         return highwayIndex;
     }
+
+
 }

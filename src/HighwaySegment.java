@@ -32,7 +32,7 @@ public class HighwaySegment {
     public double getLon() {
         return lon;
     }
-
+    //What is sign1?
     public String getSign1() {
         return sign1;
     }
