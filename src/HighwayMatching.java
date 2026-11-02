@@ -6,7 +6,7 @@ import java.util.Map;
 public class HighwayMatching {
 
     private static final String BASE32 = "0123456789bcdefghjkmnpqrstuvwxyz";
-    private static final int GEOHASH_PRECISION = 6;
+    private static final int GEOHASH_PRECISION = 5;
 
     public HighwayMatching(){}
 
@@ -43,35 +43,37 @@ public class HighwayMatching {
         double lonMin = -180.0, lonMax = 180.0;
         StringBuilder geohash = new StringBuilder();
 
-        boolean isEven = true;
-        int bit = 0;
+        int bitCount = 0;
         int ch = 0;
+        int step = 0;
 
         while (geohash.length() < precision) {
-            if (isEven) {
+            if (step % 2 == 0) {
                 double mid = (lonMin + lonMax) / 2.0;
                 if (lon >= mid) {
-                    ch |= (1 << (4 - bit));
+                    ch = (ch * 2) + 1;
                     lonMin = mid;
                 } else {
+                    ch = ch * 2;
                     lonMax = mid;
                 }
             } else {
                 double mid = (latMin + latMax) / 2.0;
                 if (lat >= mid) {
-                    ch |= (1 << (4 - bit));
+                    ch = (ch * 2) + 1;
                     latMin = mid;
                 } else {
+                    ch = ch * 2;
                     latMax = mid;
                 }
             }
 
-            isEven = !isEven;
-            if (bit < 4) {
-                bit++;
-            } else {
+            step++;
+            bitCount++;
+
+            if (bitCount == 5) {
                 geohash.append(BASE32.charAt(ch));
-                bit = 0;
+                bitCount = 0;
                 ch = 0;
             }
         }
