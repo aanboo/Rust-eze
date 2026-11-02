@@ -2,12 +2,12 @@ public class GPSLogEntry {
     private final String date_time;
     private final double lat;
     private final double lon;
-    private final int altitude;
-    private final int speed;
-    private final int sat_used;
+    private final double altitude;
+    private final double speed;
+    private final double sat_used;
 
     public GPSLogEntry(String date_time, double lat, double lon,
-                          int altitude, int speed, int sat_used) {
+                          double altitude, double speed, double sat_used) {
         this.date_time = date_time;
         this.lat = lat;
         this.lon = lon;
@@ -28,13 +28,17 @@ public class GPSLogEntry {
         return lon;
     }
 
-    public int getAltitude() {
+    public double getAltitude() {
         return altitude;
     }
 
-    public int getSpeed() {
+    public double getSpeed() {
         return speed;
     }
 
-    public int getSatUsed() {return sat_used;}
+    public double getSatUsed() {return sat_used;}
+
+    public String toString() {
+        return ;
+    }
 }

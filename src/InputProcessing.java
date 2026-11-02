@@ -16,7 +16,8 @@ public class InputProcessing {
     public static final int GPS_EXPECTED_COLUMNS = 6;
 
     public InputProcessing(){}
-    public void fileExists(String filePath) throws IOException {
+    public static void fileExists(String filePath) throws IOException {
+
         if(filePath == null || filePath.trim().isEmpty()){
             throw new IOException("Error - File cannot be opened");
         }
@@ -27,7 +28,7 @@ public class InputProcessing {
         }
     }
 
-    public Map<String, List<HighwaySegment>> readPreprocessedCsv(String filePath) throws IOException{
+    public static Map<String, List<HighwaySegment>> readPreprocessedCsv(String filePath) throws IOException{
         fileExists(filePath);
         Map<String, List<HighwaySegment>> highwayIndex = new HashMap<>();
 
@@ -84,9 +85,8 @@ public class InputProcessing {
     }
 
 
-
     //date time,latitude,longitude,altitude(m),speed(m/s),sat_used
-    public  List<GPSLogEntry> readGPSLog(String filePath) throws IOException {
+    public static List<GPSLogEntry> readGPSLog(String filePath) throws IOException {
         fileExists(filePath);
         List<GPSLogEntry> logEntries = new ArrayList<>();
         Set<String> seenDateTimes = new HashSet<>();
@@ -114,9 +114,9 @@ public class InputProcessing {
                     String date_time = tokens[0].trim();
                     double lat = Double.parseDouble(tokens[1].trim());
                     double lon = Double.parseDouble(tokens[2].trim());
-                    int altitude = Integer.parseInt(tokens[3].trim());
-                    int speed = Integer.parseInt(tokens[4].trim());
-                    int sat_used = Integer.parseInt(tokens[5].trim());
+                    double altitude = Double.parseDouble(tokens[3].trim());
+                    double speed = Double.parseDouble(tokens[4].trim());
+                    double sat_used = Double.parseDouble(tokens[5].trim());
 
                     if(date_time.isEmpty() ){
                         throw new IllegalArgumentException("Error - Records cannot be parsed");
