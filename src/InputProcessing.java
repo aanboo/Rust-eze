@@ -4,11 +4,17 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 //Component 3.1: Input Processing
 public class InputProcessing {
+    public static final int HIGHWAY_MIN_COLUMNS = 6;
+    public static final int HIGHWAY_MAX_COLUMNS = 7;
+    public static final int GPS_EXPECTED_COLUMNS = 6;
+
     public InputProcessing(){}
     public void fileExists(String filePath) throws IOException {
         if(filePath == null || filePath.trim().isEmpty()){
@@ -41,7 +47,7 @@ public class InputProcessing {
                 String[] tokens = line.split(",");
                 //6 should probably be turned into a global int because it will change once we get rid of
                 // the unecessary columns in the CSV.
-                if(tokens.length < 6){
+                if(tokens.length < HIGHWAY_MIN_COLUMNS){
                     throw new IllegalArgumentException("Error - Records cannot be parsed");
                 }
 
@@ -51,20 +57,22 @@ public class InputProcessing {
                     double lon = Double.parseDouble(tokens[2].trim());
                     String sign1 = "I-90";
                     String stFIPS = tokens[3].trim();
-                    double begMP = Double.parseDouble(tokens[5].trim());
-                    double endMP = Double.parseDouble(tokens[6].trim());
+                    double begMP = Double.parseDouble(tokens[4].trim());
+                    double endMP = Double.parseDouble(tokens[5].trim());
                     int channel;
-                    //7 should probably be turned into a global int because it will change once we get rid of
-                    // the unecessary columns in the CSV. Intellij throws an error that this will always evaluate to true
-                    if(tokens.length >= 7) {
+
+                    if(tokens.length >= HIGHWAY_MAX_COLUMNS) {
                         channel = Integer.parseInt(tokens[6].trim());
                     }else{
                         channel = (int) Math.ceil(endMP / 10.0) * 10;
                     }
 
                     HighwaySegment segment = new HighwaySegment(geohash, lat, lon, sign1, stFIPS, begMP, endMP, channel);
-                    highwayIndex.computeIfAbsent(geohash, k -> new ArrayList<>()).add(segment);
-                } catch (NumberFormatException e){
+                    if (!highwayIndex.containsKey(geohash)) {
+                        highwayIndex.put(geohash, new ArrayList<>());
+                    }
+
+                    highwayIndex.get(geohash).add(segment);                } catch (NumberFormatException e){
                     throw new IllegalArgumentException("Error - Records cannot be parsed");
                 }
             }
@@ -75,10 +83,13 @@ public class InputProcessing {
         return highwayIndex;
     }
 
+
+
     //date time,latitude,longitude,altitude(m),speed(m/s),sat_used
-    public  Map<String, List<GPSLogEntry>> readGPSLog(String filePath) throws IOException {
+    public  List<GPSLogEntry> readGPSLog(String filePath) throws IOException {
         fileExists(filePath);
-        Map<String, List<GPSLogEntry>> logEntry = new HashMap<>();
+        List<GPSLogEntry> logEntries = new ArrayList<>();
+        Set<String> seenDateTimes = new HashSet<>();
 
         try(BufferedReader reader = new BufferedReader(new FileReader(filePath.trim()))){
             String header = reader.readLine();
@@ -94,9 +105,8 @@ public class InputProcessing {
                 }
 
                 String[] tokens = line.split(",");
-                //6 should probably be turned into a global int because it will change once we get rid of
-                // the unecessary columns in the CSV.
-                if(tokens.length < 6){
+
+                if(tokens.length != GPS_EXPECTED_COLUMNS){
                     throw new IllegalArgumentException("Error - Records cannot be parsed");
                 }
 
@@ -107,9 +117,19 @@ public class InputProcessing {
                     int altitude = Integer.parseInt(tokens[3].trim());
                     int speed = Integer.parseInt(tokens[4].trim());
                     int sat_used = Integer.parseInt(tokens[5].trim());
-                    //Add catch if there are more that 6 columns
-                    GPSLogEntry log = new GPSLogEntry(date_time, lat, lon, altitude,speed,sat_used);
-                    //Add something to catch if there is an invalid or duplicate date_time?
+
+                    if(date_time.isEmpty() ){
+                        throw new IllegalArgumentException("Error - Records cannot be parsed");
+                    }
+                    if(lat < -90.0 || lat > 90.0 || lon < -180.0 || lon > 180.0){
+                        throw new IllegalArgumentException("Invalid GPS Coordinates");
+                    }
+                    if(speed < 0 || speed > 120){
+                        throw new IllegalArgumentException("Invalid Speed");
+                    }
+
+                    logEntries.add(new GPSLogEntry(date_time, lat, lon, altitude,speed,sat_used));
+
                 } catch (NumberFormatException e){
                     throw new IllegalArgumentException("Error - Records cannot be parsed");
                 }
@@ -118,7 +138,7 @@ public class InputProcessing {
             throw new IOException("Error - Records cannot be read");
         }
 
-        return logEntry;
+        return logEntries;
 
     }
 }
