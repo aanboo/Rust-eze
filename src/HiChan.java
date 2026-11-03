@@ -1,7 +1,9 @@
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HiChan {
     public static void main(String[] args) {
@@ -13,7 +15,7 @@ public class HiChan {
         }
         // Create a list to store GPSLogEntry objects
         List<GPSLogEntry> gpsLogEntries = new ArrayList<>();
-
+        Map<String, List<HighwaySegment>> highwaySegments = new HashMap();
         try {
             // Call readGPSLog from InputProcessing and store the result in gpsLogEntries
             gpsLogEntries = InputProcessing.readGPSLog(args[0]);
@@ -29,6 +31,26 @@ public class HiChan {
         } catch (IllegalArgumentException e) {
             // Handle parsing-related errors
             System.out.println("Error parsing the GPS log file: " + e.getMessage());
+        } catch (Exception e) {
+            // Catch any other unexpected exceptions
+            System.out.println("An unexpected error occurred: " + e.getMessage());
+        }
+    //Opening the preprocessed CSV
+        try {
+            // Call readPreprocessedCsv from InputProcessing and store the result in highwaySegments
+            highwaySegments = InputProcessing.readPreprocessedCsv(args[1]);
+
+            // Print the list to verify the entries
+            System.out.println("Preproccessed CSV Highway Segment Entries:");
+            for (Map.Entry<String, Integer> entry : map.entrySet()) {
+                System.out.println("Key: " + entry.getKey() + ", Value: " + entry.getValue());
+            }
+        } catch (IOException e) {
+            // Handle file-related errors
+            System.out.println("Error reading the preproccessed CSV file: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            // Handle parsing-related errors
+            System.out.println("Error parsing the preproccessed CSV file: " + e.getMessage());
         } catch (Exception e) {
             // Catch any other unexpected exceptions
             System.out.println("An unexpected error occurred: " + e.getMessage());
