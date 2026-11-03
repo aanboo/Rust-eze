@@ -6,12 +6,10 @@
     import java.util.List;
 
 
-
+//This should append whatever the channelID is for each GPSLogEntry in the GPSLog_1.csv.
     public class OutputGeneration {
 
-        public static void writeOutput(
-            List<MatchedRecord> matchedRecords,
-        String outputFile) throws IOException{
+        public static void writeOutput(List<MatchedRecord> matchedRecords, String outputFile) throws IOException{
         if(matchedRecords == null){
             throw new IllegalArgumentException("Matched records is null");
         }
@@ -21,7 +19,7 @@
         }
 
         Path outputPath = Paths.get(outputFile);
-
+        //This should append the channel ID's to the GPSLOG_1.csv so it should exist.
         if(Files.exists(outputPath)){
             throw new IllegalArgumentException("Output file already exists:" + outputFile);
         }
