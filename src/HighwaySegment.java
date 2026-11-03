@@ -61,4 +61,8 @@ public class HighwaySegment {
         }
         return stFIPS;
     }
+
+    public String toString(){
+        return geohash + " " + lat + " " + lon + " " + sign1 + " " + stFIPS + " " + begMP + " " + endMP + " " + channel;
+    }
 }

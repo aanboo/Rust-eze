@@ -9,14 +9,18 @@ public class HiChan {
     public static void main(String[] args) {
         System.out.println("Hello welcome to the HiChan utility!");
         // Check if the file path is provided in args
-        if (args.length == 0) {
-            System.out.println("Error: Please provide the GPS log file path as an argument.");
+        if (args.length != 2) {
+            System.out.println("Error: Please provide the GPS log file path and the preprocessed CSV as an argument.");
             return;
         }
         // Create a list to store GPSLogEntry objects
         List<GPSLogEntry> gpsLogEntries = new ArrayList<>();
         Map<String, List<HighwaySegment>> highwaySegments = new HashMap();
-        try {
+    }
+}
+
+//Testing for opening and printing the contents of the given preprocessed csv and gps log.
+/*try {
             // Call readGPSLog from InputProcessing and store the result in gpsLogEntries
             gpsLogEntries = InputProcessing.readGPSLog(args[0]);
 
@@ -42,7 +46,7 @@ public class HiChan {
 
             // Print the list to verify the entries
             System.out.println("Preproccessed CSV Highway Segment Entries:");
-            for (Map.Entry<String, Integer> entry : map.entrySet()) {
+            for (Map.Entry<String, List<HighwaySegment>> entry : highwaySegments.entrySet()) {
                 System.out.println("Key: " + entry.getKey() + ", Value: " + entry.getValue());
             }
         } catch (IOException e) {
@@ -56,8 +60,5 @@ public class HiChan {
             System.out.println("An unexpected error occurred: " + e.getMessage());
         }
     }
-}
-
-
-
+    */
 
