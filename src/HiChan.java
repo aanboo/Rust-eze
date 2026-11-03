@@ -6,13 +6,11 @@ import java.util.List;
 public class HiChan {
     public static void main(String[] args) {
         System.out.println("Hello welcome to the HiChan utility!");
-
         // Check if the file path is provided in args
         if (args.length == 0) {
             System.out.println("Error: Please provide the GPS log file path as an argument.");
             return;
         }
-
         // Create a list to store GPSLogEntry objects
         List<GPSLogEntry> gpsLogEntries = new ArrayList<>();
 
