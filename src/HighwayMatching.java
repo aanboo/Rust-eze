@@ -10,12 +10,12 @@ public class HighwayMatching {
 
     public HighwayMatching(){}
 
-    public List<MatchedRecord> matchRecords(List<GPSLogEntry> gpsLogs, Map<String, List<HighwaySegment>> highwayMap) {
+    public List<MatchedRecord> matchRecords(List<GPSLogEntry> gpsLogs, Map<String, List<HighwaySegment>> highwaySegments) {
         List<MatchedRecord> results = new ArrayList<>();
 
         for (GPSLogEntry gps : gpsLogs) {
             String hash = encodeGeohash(gps.getLat(), gps.getLon(), GEOHASH_PRECISION);
-            List<HighwaySegment> candidates = highwayMap.get(hash);
+            List<HighwaySegment> candidates = highwaySegments.get(hash);
 
             HighwaySegment bestMatch = null;
             double minDistance = Double.MAX_VALUE;

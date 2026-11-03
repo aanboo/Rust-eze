@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+//Should the program get the highway channel data filepath from the user as well?
 public class HiChan {
     public static void main(String[] args) {
         System.out.println("Hello welcome to the HiChan utility!");
