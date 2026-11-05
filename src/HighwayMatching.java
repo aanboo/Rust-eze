@@ -15,7 +15,8 @@ public class HighwayMatching {
 
         for (GPSLogEntry gps : gpsLogs) {
             String hash = encodeGeohash(gps.getLat(), gps.getLon(), GEOHASH_PRECISION);
-            List<HighwaySegment> candidates = highwaySegments.get(hash);
+            //takes the hash calculated from the gps log and matches it to the hashmap  to find the right channel?
+            List<HighwaySegment> candidates = highwaySegments.get(hash); //returns all the hash
 
             HighwaySegment bestMatch = null;
             double minDistance = Double.MAX_VALUE;
@@ -37,7 +38,7 @@ public class HighwayMatching {
         return results;
     }
 
-    // Base-32 geohash encoding matching preprocessor precision level
+    // encodeGeohash takes in the lat and lon from the gps file and converts to a geohash
     public static String encodeGeohash(double lat, double lon, int precision) {
         double latMin = -90.0, latMax = 90.0;
         double lonMin = -180.0, lonMax = 180.0;
@@ -81,6 +82,7 @@ public class HighwayMatching {
         return geohash.toString();
     }
 
+    //What is this supposed to do?
     // Euclidean distance approximation for nearby points
     private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
         double dLat = lat1 - lat2;
