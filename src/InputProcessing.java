@@ -84,7 +84,6 @@ public class InputProcessing {
         return highwayIndex;
     }
 
-
     //date time,latitude,longitude,altitude(m),speed(m/s),sat_used
     public static List<GPSLogEntry> readGPSLog(String filePath) throws IOException {
         fileExists(filePath);

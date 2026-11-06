@@ -39,6 +39,6 @@ public class GPSLogEntry {
     public double getSatUsed() {return sat_used;}
 
     public String toString() {
-        return " " +date_time + " " + lat + " " + lon + " " + altitude + " " +speed + " " +sat_used;
+        return date_time + " " + lat + " " + lon + " " + altitude + " " +speed + " " +sat_used;
     }
 }

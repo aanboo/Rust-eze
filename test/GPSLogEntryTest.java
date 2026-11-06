@@ -33,12 +33,16 @@ class GPSLogEntryTest {
 
     @org.junit.jupiter.api.Test
     void getSatUsed() {
-        assertEquals(22, entry.getSatUsed());
+        assertEquals(22.0, entry.getSatUsed());
     }
 
     @org.junit.jupiter.api.Test
     void testToString() {
         assertNotNull(entry.toString());
         assertFalse(entry.toString().isEmpty());
+        assertEquals(
+                "2026-09-22 20:17:15.000 47.71314203 -116.9488803 646.743 13.05 22.0",
+                entry.toString()
+        );
     }
 }
