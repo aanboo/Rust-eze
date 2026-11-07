@@ -96,6 +96,7 @@ public class InputProcessing {
                 throw new IOException("Error - Records cannot be read");
             }
 
+
             String line;
             while((line = reader.readLine()) != null){
                 line = line.trim();
