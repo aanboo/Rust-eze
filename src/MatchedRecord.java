@@ -33,4 +33,7 @@ public class MatchedRecord {
         }
         return ""; // Outputs empty field in CSV rather than arbitrary placeholder text
     }
+    public String toString(){
+        return gpsEntry + " " + segment;
+    }
 }

@@ -4,13 +4,11 @@ import java.util.Map;
 
 // Component 3.2: Highway Matching
 public class HighwayMatching {
-
     private static final String BASE32 = "0123456789bcdefghjkmnpqrstuvwxyz";
     private static final int GEOHASH_PRECISION = 5;
-
     public HighwayMatching(){}
 
-    public List<MatchedRecord> matchRecords(List<GPSLogEntry> gpsLogs, Map<String, List<HighwaySegment>> highwaySegments) {
+    public static List<MatchedRecord> matchRecords(List<GPSLogEntry> gpsLogs, Map<String, List<HighwaySegment>> highwaySegments) {
         List<MatchedRecord> results = new ArrayList<>();
 
         for (GPSLogEntry gps : gpsLogs) {
@@ -84,7 +82,7 @@ public class HighwayMatching {
 
     //What is this supposed to do?
     // Euclidean distance approximation for nearby points
-    private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+    private static double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
         double dLat = lat1 - lat2;
         double dLon = lon1 - lon2;
         return Math.sqrt((dLat * dLat) + (dLon * dLon));

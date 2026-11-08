@@ -54,8 +54,6 @@ public class InputProcessing {
 
                 try{
                     String geohash = tokens[0].trim();
-                    double lat = Double.parseDouble(tokens[1].trim());
-                    double lon = Double.parseDouble(tokens[2].trim());
                     String sign1 = "I-90";
                     String stFIPS = tokens[3].trim();
                     double begMP = Double.parseDouble(tokens[4].trim());
@@ -68,7 +66,7 @@ public class InputProcessing {
                         channel = (int) Math.ceil(endMP / 10.0) * 10;
                     }
 
-                    HighwaySegment segment = new HighwaySegment(geohash, lat, lon, sign1, stFIPS, begMP, endMP, channel);
+                    HighwaySegment segment = new HighwaySegment(geohash, sign1, stFIPS, begMP, endMP, channel);
                     if (!highwayIndex.containsKey(geohash)) {
                         highwayIndex.put(geohash, new ArrayList<>());
                     }
