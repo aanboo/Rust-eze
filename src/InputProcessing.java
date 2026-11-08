@@ -139,6 +139,5 @@ public class InputProcessing {
         }
 
         return logEntries;
-
     }
 }
