@@ -102,9 +102,9 @@ public class InputProcessing {
                     String date_time = tokens[0].trim();
                     double lat = Double.parseDouble(tokens[1].trim());
                     double lon = Double.parseDouble(tokens[2].trim());
-                    double altitude = Double.parseDouble(tokens[3].trim());
+                    int altitude = Integer.parseInt(tokens[3].trim());
                     double speed = Double.parseDouble(tokens[4].trim());
-                    double sat_used = Double.parseDouble(tokens[5].trim());
+                    int sat_used = Integer.parseInt(tokens[5].trim());
 
                     if(date_time.isEmpty() ){
                         throw new IllegalArgumentException("Error - Records cannot be parsed");
