@@ -11,8 +11,7 @@ import java.util.Set;
 //
 //Component 3.1: Input Processing
 public class InputProcessing {
-    public static final int HIGHWAY_MIN_COLUMNS = 6;
-    public static final int HIGHWAY_MAX_COLUMNS = 7;
+    public static final int HIGHWAY_EXPECTED_COLUMNS = 5;
     public static final int GPS_EXPECTED_COLUMNS = 6;
 
     public InputProcessing(){}
@@ -46,32 +45,23 @@ public class InputProcessing {
                 }
 
                 String[] tokens = line.split(",");
-                //6 should probably be turned into a global int because it will change once we get rid of
-                // the unecessary columns in the CSV.
-                if(tokens.length < HIGHWAY_MIN_COLUMNS){
-                    throw new IllegalArgumentException("Error - Records cannot be parsed");
+                if(tokens.length != HIGHWAY_EXPECTED_COLUMNS){
+                    throw new IllegalArgumentException("Error - Invalid Column length");
                 }
 
                 try{
                     String geohash = tokens[0].trim();
-                    String sign1 = "I-90";
-                    String stFIPS = tokens[3].trim();
-                    double begMP = Double.parseDouble(tokens[4].trim());
-                    double endMP = Double.parseDouble(tokens[5].trim());
-                    int channel;
+                    String stFIPS = tokens[1].trim();
+                    double begMP = Double.parseDouble(tokens[2].trim());
+                    double endMP = Double.parseDouble(tokens[3].trim());
+                    int channel = (int) Math.ceil(endMP / 10.0) * 10;
 
-                    if(tokens.length >= HIGHWAY_MAX_COLUMNS) {
-                        channel = Integer.parseInt(tokens[6].trim());
-                    }else{
-                        channel = (int) Math.ceil(endMP / 10.0) * 10;
-                    }
-
-                    HighwaySegment segment = new HighwaySegment(geohash, sign1, stFIPS, begMP, endMP, channel);
+                    HighwaySegment segment = new HighwaySegment(geohash, stFIPS, begMP, endMP, channel);
                     if (!highwayIndex.containsKey(geohash)) {
                         highwayIndex.put(geohash, new ArrayList<>());
                     }
-
-                    highwayIndex.get(geohash).add(segment);                } catch (NumberFormatException e){
+                    highwayIndex.get(geohash).add(segment);
+                } catch (NumberFormatException e){
                     throw new IllegalArgumentException("Error - Records cannot be parsed");
                 }
             }

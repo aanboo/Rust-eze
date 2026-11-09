@@ -7,27 +7,30 @@ public class HighwayMatching {
     private static final String BASE32 = "0123456789bcdefghjkmnpqrstuvwxyz";
     private static final int GEOHASH_PRECISION = 5;
     public HighwayMatching(){}
-
-    public static List<MatchedRecord> matchRecords(List<GPSLogEntry> gpsLogs, Map<String, List<HighwaySegment>> highwaySegments) {
+    public static List<MatchedRecord> matchRecords(List<GPSLogEntry> gpsLogs, Map<String, List<HighwaySegment>> highwaySegments) throws IllegalArgumentException{
         List<MatchedRecord> results = new ArrayList<>();
 
         for (GPSLogEntry gps : gpsLogs) {
             String hash = encodeGeohash(gps.getLat(), gps.getLon(), GEOHASH_PRECISION);
-            //takes the hash calculated from the gps log and matches it to the hashmap  to find the right channel?
+            //takes the hash calculated from the gps log and matches it to the hashmap to find the right channel?
             List<HighwaySegment> candidates = highwaySegments.get(hash); //returns all the hash
 
             HighwaySegment bestMatch = null;
-            double minDistance = Double.MAX_VALUE;
 
             if (candidates != null && !candidates.isEmpty()) {
                 for (HighwaySegment segment : candidates) {
-                    double dist = calculateDistance(gps.getLat(), gps.getLon(),
-                            segment.getLat(), segment.getLon());
-                    if (dist < minDistance) {
-                        minDistance = dist;
+                    // Pick the segment whose geohash exactly matches the generated hash
+                    if (segment.getGeohash().equals(hash)) {
+                        // Since geohashes are unique in the highway file, we can take the first exact match
                         bestMatch = segment;
+                        break;
                     }
                 }
+            }
+            // If we didn't find an exact match, throw an error
+            if (bestMatch == null) {
+                System.out.println("Highway segment geohash is: "+ hash);
+                throw new IllegalArgumentException("Error - Highway segment cannot be matched");
             }
 
             results.add(new MatchedRecord(gps, bestMatch));
@@ -78,13 +81,5 @@ public class HighwayMatching {
         }
 
         return geohash.toString();
-    }
-
-    //What is this supposed to do?
-    // Euclidean distance approximation for nearby points
-    private static double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-        double dLat = lat1 - lat2;
-        double dLon = lon1 - lon2;
-        return Math.sqrt((dLat * dLat) + (dLon * dLon));
     }
 }

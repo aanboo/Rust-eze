@@ -44,10 +44,14 @@ public class HiChan {
             System.out.println("An unexpected error occurred: " + e.getMessage());
         }
 
+        try {
+            List<MatchedRecord> matchedRecords = HighwayMatching.matchRecords(gpsLogEntries, highwaySegments);
 
-        List<MatchedRecord> matchedRecords = HighwayMatching.matchRecords(gpsLogEntries, highwaySegments);
-        for(MatchedRecord match:matchedRecords){
-            System.out.println(match);
+            for (MatchedRecord match : matchedRecords) {
+                System.out.println(match);
+            }
+        }catch(Exception e){
+            System.out.println("Error matching segement: " + e.getMessage());
         }
 
     }

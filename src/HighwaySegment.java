@@ -1,16 +1,13 @@
 public class HighwaySegment {
     private final String geohash;
-    private final String sign1;
     private final String stFIPS;
     private final double begMP;
     private final double endMP;
     private final int channel;
 
-    public HighwaySegment(String geohash,
-                          String sign1, String stFIPS, double begMP,
+    public HighwaySegment(String geohash, String stFIPS, double begMP,
                           double endMP, int channel) {
         this.geohash = geohash;
-        this.sign1 = sign1;
         this.stFIPS = stFIPS;
         this.begMP = begMP;
         this.endMP = endMP;
@@ -19,10 +16,6 @@ public class HighwaySegment {
 
     public String getGeohash() {
         return geohash;
-    }
-
-    public String getSign1() {
-        return sign1;
     }
 
     public String getStFIPS() {
@@ -51,6 +44,6 @@ public class HighwaySegment {
     }
 
     public String toString(){
-        return geohash + " " + sign1 + " " + stFIPS + " " + begMP + " " + endMP + " " + channel;
+        return geohash + " " + stFIPS + " " + begMP + " " + endMP + " " + channel;
     }
 }
