@@ -46,7 +46,7 @@ public class InputProcessing {
 
                 String[] tokens = line.split(",");
                 if(tokens.length != HIGHWAY_EXPECTED_COLUMNS){
-                    throw new IllegalArgumentException("Error - Invalid Column length");
+                    throw new IllegalArgumentException("Error - Invalid Format");
                 }
 
                 try{
@@ -110,10 +110,18 @@ public class InputProcessing {
                         throw new IllegalArgumentException("Error - Records cannot be parsed");
                     }
                     if(lat < -90.0 || lat > 90.0 || lon < -180.0 || lon > 180.0){
-                        throw new IllegalArgumentException("Invalid GPS Coordinates");
+                        throw new IllegalArgumentException("Error - Invalid GPS Coordinates");
                     }
                     if(speed < 0 || speed > 120){
-                        throw new IllegalArgumentException("Invalid Speed");
+                        throw new IllegalArgumentException("Error - Invalid Speed");
+                    }
+
+                    // Check for duplicate entries (by key,timestamp) and remove them
+                    if (!seenDateTimes.add(date_time)) {
+                        // Print error to screen but do not throw an exception
+                        System.err.println("Error - Duplicate timestamp entry detected for: " + date_time);
+                        // Skip adding this duplicate entry so it never reaches any HashMap conversion later
+                        continue;
                     }
 
                     logEntries.add(new GPSLogEntry(date_time, lat, lon, altitude,speed,sat_used));
