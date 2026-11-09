@@ -53,8 +53,8 @@ public class InputProcessing {
                 try{
                     String geohash = tokens[0].trim();
                     String stFIPS = tokens[1].trim();
-                    int begMP = Integer.parseInt(tokens[2].trim());
-                    int endMP = Integer.parseInt(tokens[3].trim());
+                    Double begMP = Double.parseDouble(tokens[2].trim());
+                    Double endMP = Double.parseDouble(tokens[3].trim());
                     int channel = Integer.parseInt(tokens[4].trim());
 
                     HighwaySegment segment = new HighwaySegment(geohash, stFIPS, begMP, endMP, channel);
@@ -109,22 +109,22 @@ public class InputProcessing {
                     double speed = Double.parseDouble(tokens[4].trim());
                     int sat_used = Integer.parseInt(tokens[5].trim());
 
-                    if(date_time.isEmpty() ){
-                        throw new IllegalArgumentException("Error - Records cannot be parsed");
-                    }
-                    if(lat < -90.0 || lat > 90.0 || lon < -180.0 || lon > 180.0){
-                        throw new IllegalArgumentException("Error - Invalid GPS Coordinates");
-                    }
-                    if(speed < 0 || speed > 120){
-                        throw new IllegalArgumentException("Error - Invalid Speed");
-                    }
-
                     // Check for duplicate entries (by key,timestamp) and remove them
                     if (!seenDateTimes.add(date_time)) {
                         // Print error to screen but do not throw an exception
                         System.err.println("Error - Duplicate timestamp entry detected for: " + date_time);
                         // Skip adding this duplicate entry so it never reaches any HashMap conversion later
                         continue;
+                    }
+
+                    if(date_time.isEmpty() ){
+                        throw new IllegalArgumentException("Error - Records cannot be parsed");
+                    }
+                    if(lat < -90.0 || lat > 90.0 || lon < -180.0 || lon > 180.0){
+                        throw new IllegalArgumentException("Error - Invalid GPS Coordinates");
+                    }
+                    if(speed < 0 || speed > 90){
+                        throw new IllegalArgumentException("Error - Invalid Speed");
                     }
 
                     logEntries.add(new GPSLogEntry(date_time, lat, lon, altitude,speed,sat_used));
