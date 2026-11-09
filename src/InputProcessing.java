@@ -13,6 +13,7 @@ import java.util.Set;
 public class InputProcessing {
     public static final int HIGHWAY_EXPECTED_COLUMNS = 5;
     public static final int GPS_EXPECTED_COLUMNS = 6;
+    public static final int GEOHASH_PRECISION = 5;
 
     public InputProcessing(){}
     public static void fileExists(String filePath) throws IOException {
@@ -61,12 +62,15 @@ public class InputProcessing {
                         highwayIndex.put(geohash, new ArrayList<>());
                     }
                     highwayIndex.get(geohash).add(segment);
+                    if (geohash.length() != GEOHASH_PRECISION) {
+                        throw new IllegalArgumentException("Error - Invalid Format");
+                    }
                 } catch (NumberFormatException e){
-                    throw new IllegalArgumentException("Error - Records cannot be parsed");
+                    throw new IllegalArgumentException("Error - Invalid Format",e );
                 }
             }
         } catch (IOException e){
-            throw new IOException("Error - Records cannot be read");
+            throw new IOException("Error - Records cannot be read", e);
         }
 
         return highwayIndex;
@@ -84,7 +88,6 @@ public class InputProcessing {
                 throw new IOException("Error - Records cannot be read");
             }
 
-
             String line;
             while((line = reader.readLine()) != null){
                 line = line.trim();
@@ -92,10 +95,10 @@ public class InputProcessing {
                     continue;
                 }
 
-                String[] tokens = line.split(",");
+                String[] tokens = line.split(",", -1);
 
                 if(tokens.length != GPS_EXPECTED_COLUMNS){
-                    throw new IllegalArgumentException("Error - Records cannot be parsed");
+                    throw new IllegalArgumentException("Error - Invalid Format");
                 }
 
                 try{
@@ -127,11 +130,11 @@ public class InputProcessing {
                     logEntries.add(new GPSLogEntry(date_time, lat, lon, altitude,speed,sat_used));
 
                 } catch (NumberFormatException e){
-                    throw new IllegalArgumentException("Error - Records cannot be parsed");
+                    throw new IllegalArgumentException("Error - Records cannot be parsed", e);
                 }
             }
         } catch (IOException e){
-            throw new IOException("Error - Records cannot be read");
+            throw new IOException("Error - Records cannot be read",e);
         }
 
         return logEntries;
