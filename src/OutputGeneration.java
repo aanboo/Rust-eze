@@ -1,14 +1,23 @@
-    import java.io.BufferedWriter;
-    import java.io.IOException;
-    import java.nio.file.Files;
-    import java.nio.file.Path;
-    import java.nio.file.Paths;
-    import java.nio.file.StandardOpenOption;
-    import java.util.List;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.List;
 
 
 //This should append whatever the channelID is for each GPSLogEntry in the GPSLog_1.csv.
-    public class OutputGeneration {
+public class OutputGeneration {
+
+    public static void writeOutput(List<MatchedRecord> matchedRecords, String outputFile) throws IOException {
+        String result = writeOutput(matchedRecords, outputFile, false);
+        if ("Output File cannot be written to".equals(result)) {
+            throw new IllegalArgumentException("Output File cannot be written to");
+        } else if ("Error Overwrite Authorization is not provided".equals(result)) {
+            throw new IllegalArgumentException("Error Overwrite Authorization is not provided");
+        }
+    }
 
     public static String writeOutput(
             List<MatchedRecord> matchedRecords,
@@ -27,9 +36,6 @@
             }
 
 
-            //This should append the channel ID's to the GPSLOG_1.csv so it should exist.
-
-
             try (BufferedWriter writer = Files.newBufferedWriter(
                     outputPath,
                     StandardOpenOption.CREATE,
@@ -44,7 +50,11 @@
 
                 for (MatchedRecord record : matchedRecords) {
                     GPSLogEntry gps = record.getGpsEntry();
-                    String channelID = record.getChannelID();
+                    String channelID = "UNKNOWN";
+
+                    if (record.hasMatch()) {
+                        channelID = record.getChannelID();
+                    }
 
                     if (channelID == null || channelID.trim().isEmpty()) {
                         channelID = "UNKNOWN";

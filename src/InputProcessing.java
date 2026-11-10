@@ -13,6 +13,7 @@ import java.util.Set;
 public class InputProcessing {
     public static final int HIGHWAY_EXPECTED_COLUMNS = 5;
     public static final int GPS_EXPECTED_COLUMNS = 6;
+    public static final int GEOHASH_PRECISION = 5;
 
     public InputProcessing(){}
     public static void fileExists(String filePath) throws IOException {
@@ -46,27 +47,29 @@ public class InputProcessing {
 
                 String[] tokens = line.split(",");
                 if(tokens.length != HIGHWAY_EXPECTED_COLUMNS){
-                    throw new IllegalArgumentException("Error - Invalid Column length");
+                    throw new IllegalArgumentException("Error - Invalid Format");
                 }
 
                 try{
                     String geohash = tokens[0].trim();
                     String stFIPS = tokens[1].trim();
-                    double begMP = Double.parseDouble(tokens[2].trim());
-                    double endMP = Double.parseDouble(tokens[3].trim());
-                    int channel = (int) Math.ceil(endMP / 10.0) * 10;
-
+                    Double begMP = Double.parseDouble(tokens[2].trim());
+                    Double endMP = Double.parseDouble(tokens[3].trim());
+                    int channel = Integer.parseInt(tokens[4].trim());
+                    if (geohash.length() != GEOHASH_PRECISION) {
+                        throw new IllegalArgumentException("Error - Invalid Format");
+                    }
                     HighwaySegment segment = new HighwaySegment(geohash, stFIPS, begMP, endMP, channel);
                     if (!highwayIndex.containsKey(geohash)) {
                         highwayIndex.put(geohash, new ArrayList<>());
                     }
                     highwayIndex.get(geohash).add(segment);
                 } catch (NumberFormatException e){
-                    throw new IllegalArgumentException("Error - Records cannot be parsed");
+                    throw new IllegalArgumentException("Error - Invalid Format",e );
                 }
             }
         } catch (IOException e){
-            throw new IOException("Error - Records cannot be read");
+            throw new IOException("Error - Records cannot be read", e);
         }
 
         return highwayIndex;
@@ -84,7 +87,6 @@ public class InputProcessing {
                 throw new IOException("Error - Records cannot be read");
             }
 
-
             String line;
             while((line = reader.readLine()) != null){
                 String originalLine = line;
@@ -93,10 +95,10 @@ public class InputProcessing {
                     continue;
                 }
 
-                String[] tokens = line.split(",");
+                String[] tokens = line.split(",", -1);
 
                 if(tokens.length != GPS_EXPECTED_COLUMNS){
-                    throw new IllegalArgumentException("Error - Records cannot be parsed");
+                    throw new IllegalArgumentException("Error - Invalid Format");
                 }
 
                 try{
@@ -105,16 +107,24 @@ public class InputProcessing {
                     double lon = Double.parseDouble(tokens[2].trim());
                     double altitude = Double.parseDouble(tokens[3].trim());
                     double speed = Double.parseDouble(tokens[4].trim());
-                    double sat_used = Double.parseDouble(tokens[5].trim());
+                    int sat_used = Integer.parseInt(tokens[5].trim());
+
+                    // Check for duplicate entries (by key,timestamp) and remove them
+                    if (!seenDateTimes.add(date_time)) {
+                        // Print error to screen but do not throw an exception
+                        System.err.println("Error - Duplicate timestamp entry detected for: " + date_time);
+                        // Skip adding this duplicate entry so it never reaches any HashMap conversion later
+                        continue;
+                    }
 
                     if(date_time.isEmpty() ){
                         throw new IllegalArgumentException("Error - Records cannot be parsed");
                     }
                     if(lat < -90.0 || lat > 90.0 || lon < -180.0 || lon > 180.0){
-                        throw new IllegalArgumentException("Invalid GPS Coordinates");
+                        throw new IllegalArgumentException("Error - Invalid GPS Coordinates");
                     }
-                    if(speed < 0 || speed > 120){
-                        throw new IllegalArgumentException("Invalid Speed");
+                    if(speed < 0 || speed > 90){
+                        throw new IllegalArgumentException("Error - Invalid Speed");
                     }
 
                     GPSLogEntry entry = new GPSLogEntry(date_time, lat, lon, altitude,speed,sat_used);
@@ -123,11 +133,11 @@ public class InputProcessing {
                     //logEntries.add(new GPSLogEntry(date_time, lat, lon, altitude,speed,sat_used));
 
                 } catch (NumberFormatException e){
-                    throw new IllegalArgumentException("Error - Records cannot be parsed");
+                    throw new IllegalArgumentException("Error - Records cannot be parsed", e);
                 }
             }
         } catch (IOException e){
-            throw new IOException("Error - Records cannot be read");
+            throw new IOException("Error - Records cannot be read",e);
         }
 
         return logEntries;

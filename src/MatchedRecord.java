@@ -2,11 +2,26 @@
 public class MatchedRecord {
     private final GPSLogEntry gpsEntry;
     private final HighwaySegment segment;
-    private String channelID = "UNKNOWN";
+    private final String channelID;
 
     public MatchedRecord(GPSLogEntry gpsEntry, HighwaySegment segment) {
         this.gpsEntry = gpsEntry;
         this.segment = segment;
+        if (segment != null) {
+            this.channelID = "#I90" + segment.getSateCode() + "EB_" + segment.getChannel();
+        } else {
+            this.channelID = "UNKNOWN";
+        }
+    }
+
+    public MatchedRecord(GPSLogEntry gpsEntry, HighwaySegment segment, String channelID) {
+        this.gpsEntry = gpsEntry;
+        this.segment = segment;
+        if (channelID != null && !channelID.trim().isEmpty()) {
+            this.channelID = channelID;
+        } else {
+            this.channelID = "UNKNOWN";
+        }
     }
 
     public GPSLogEntry getGpsEntry() {
@@ -35,19 +50,10 @@ public class MatchedRecord {
         return ""; // Outputs empty field in CSV rather than arbitrary placeholder text
     }
 
-    public String getChannelID(){
+    public String getChannelID() {
         return channelID;
     }
 
-    public void setChannelID(String channelID){
-        if(channelID == null || channelID.trim().isEmpty()){
-            this.channelID = "UNKNOWN";
-        } else {
-            this.channelID = channelID;
-        }
-    }
-
-    @Override
     public String toString(){
         return gpsEntry + " " + segment;
     }

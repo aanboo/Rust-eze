@@ -4,11 +4,10 @@ public class GPSLogEntry {
     private final double lon;
     private final double altitude;
     private final double speed;
-    private final double sat_used;
-    private String originalCsvLine;
+    private final int sat_used;
 
     public GPSLogEntry(String date_time, double lat, double lon,
-                          double altitude, double speed, double sat_used) {
+                          double altitude, double speed, int sat_used) {
         this.date_time = date_time;
         this.lat = lat;
         this.lon = lon;
@@ -37,13 +36,10 @@ public class GPSLogEntry {
         return speed;
     }
 
-    public double getSatUsed() {return sat_used;}
+    public int getSatUsed() {return sat_used;}
 
-    public String getOriginalCsvLine() { return originalCsvLine; }
+    public String getOriginalCsvLine(){ return date_time + "," + lat + "," + lon + "," + altitude + "," + speed + "," + sat_used; }
 
-    public void setOriginalCsvLine(String originalCsvLine) { this.originalCsvLine = originalCsvLine; }
-
-    @Override
     public String toString() {
         return date_time + " " + lat + " " + lon + " " + altitude + " " +speed + " " +sat_used;
     }

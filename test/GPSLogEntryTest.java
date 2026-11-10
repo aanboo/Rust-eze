@@ -2,8 +2,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class GPSLogEntryTest {
 
-    private final GPSLogEntry waEntry = new GPSLogEntry("2026-09-22 20:37:41.000", 47.654030, -117.381552, 568.148, 26.41, 26.0);
-    private final GPSLogEntry idEntry = new GPSLogEntry("2026-09-22 20:17:15.000", 47.71314203, -116.9488803, 646.743, 13.05, 22.0);
+    private final GPSLogEntry waEntry = new GPSLogEntry("2026-09-22 20:37:41.000", 47.654030, -117.381552, 568, 26.41, 26);
+    private final GPSLogEntry idEntry = new GPSLogEntry("2026-09-22 20:17:15.000", 47.71314203, -116.9488803, 647, 13.05, 22);
 
     @org.junit.jupiter.api.Test
     void getDateTime() {
@@ -19,26 +19,26 @@ class GPSLogEntryTest {
 
     @org.junit.jupiter.api.Test
     void getLon() {
-        assertEquals(-117.381552, waEntry.getLon(), 0.0001);
-        assertEquals(-116.9488803, idEntry.getLon(), 0.0001);
+        assertEquals(-117.381552, waEntry.getLon());
+        assertEquals(-116.9488803, idEntry.getLon());
     }
 
     @org.junit.jupiter.api.Test
     void getAltitude() {
-        assertEquals(568.148, waEntry.getAltitude(), 0.001);
-        assertEquals(646.743, idEntry.getAltitude(), 0.0001);
+        assertEquals(568.0, waEntry.getAltitude(), 0.001);
+        assertEquals(647.0, idEntry.getAltitude(), 0.001);
     }
 
     @org.junit.jupiter.api.Test
     void getSpeed() {
-        assertEquals(26.41, waEntry.getSpeed(), 0.001);
-        assertEquals(13.05, idEntry.getSpeed(), 0.0001);
+        assertEquals(26.41, waEntry.getSpeed());
+        assertEquals(13.05, idEntry.getSpeed());
     }
 
     @org.junit.jupiter.api.Test
     void getSatUsed() {
-        assertEquals(26.0, waEntry.getSatUsed(), 0.001);
-        assertEquals(22.0, idEntry.getSatUsed(), 0.001);
+        assertEquals(26, waEntry.getSatUsed());
+        assertEquals(22, idEntry.getSatUsed());
     }
 
     @org.junit.jupiter.api.Test

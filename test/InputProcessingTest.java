@@ -2,6 +2,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.Map;
 
 class InputProcessingTest {
 
@@ -41,8 +43,42 @@ class InputProcessingTest {
         }
 
     @org.junit.jupiter.api.Test
-    void readPreprocessedCsv() {
+    void readPreprocessedCsv() throws IOException {
+        Path tempFile = Files.createTempFile("channels_test", ".csv");
 
+        try {
+            Files.writeString(tempFile, "geohash,stfips,begmp,endmp,channel\nc2kx0,WA,279,279,280\nc2kz6,ID,0,7,10\n");
+
+            Map<String, List<HighwaySegment>> index = InputProcessing.readPreprocessedCsv(tempFile.toString());
+
+            assertNotNull(index);
+            assertTrue(index.containsKey("c2kx0"));
+            assertTrue(index.containsKey("c2kz6"));
+
+            HighwaySegment wa = index.get("c2kx0").getFirst();
+            assertEquals("WA", wa.getStFIPS());
+            assertEquals(279, wa.getBegMP());
+            assertEquals(279, wa.getEndMP());
+            assertEquals(280, wa.getChannel());
+
+            HighwaySegment id = index.get("c2kz6").getFirst();
+            assertEquals("ID", id.getStFIPS());
+            assertEquals(0, id.getBegMP());
+            assertEquals(7, id.getEndMP());
+            assertEquals(10, id.getChannel());
+
+        } finally {
+            Files.deleteIfExists(tempFile);
+        }
+
+        // Test missing file throws IOException
+        boolean missingCaught = false;
+        try {
+            InputProcessing.readPreprocessedCsv("non_existent_file.csv");
+        } catch (IOException e) {
+            missingCaught = true;
+        }
+        assertTrue(missingCaught);
     }
 
     @org.junit.jupiter.api.Test
@@ -52,8 +88,7 @@ class InputProcessingTest {
 
         try {
             Files.writeString(tempFile,
-                    "DateTime,Lat,Lon,Altitude,Speed,SatUsed\n" +
-                            "2026-09-22 20:17:15.000,47.71314203,-116.9488803,646.743,13.05,22\n"
+                    "DateTime,Lat,Lon,Altitude,Speed,SatUsed\n2026-09-22 20:17:15.000,47.71314203,-116.9488803,647,13.05,22\n"
             );
 
             // Tests reading a valid CSV file
@@ -101,8 +136,7 @@ class InputProcessingTest {
 
         try {
             Files.writeString(tooFewColumns,
-                    "DateTime,Lat,Lon,Altitude,Speed,SatUsed\n" +
-                            "2026-09-22 20:17:15.000,47.71314203,-116.9488803,646.743\n"
+                    "DateTime,Lat,Lon,Altitude,Speed,SatUsed\n2026-09-22 20:17:15.000,47.71314203,-116.9488803,647\n"
             );
 
             assertThrows(IllegalArgumentException.class, () ->
@@ -117,8 +151,7 @@ class InputProcessingTest {
 
         try {
             Files.writeString(tooManyColumns,
-                    "DateTime,Lat,Lon,Altitude,Speed,SatUsed\n" +
-                            "2026-09-22 20:17:15.000,47.71314203,-116.9488803,646.743,13.05,22,extra\n"
+                    "DateTime,Lat,Lon,Altitude,Speed,SatUsed\n2026-09-22 20:17:15.000,47.71314203,-116.9488803,647,13.05,22,extra\n"
             );
 
             assertThrows(IllegalArgumentException.class, () ->
@@ -133,8 +166,7 @@ class InputProcessingTest {
 
         try {
             Files.writeString(invalidNumber,
-                    "DateTime,Lat,Lon,Altitude,Speed,SatUsed\n" +
-                            "2026-09-22 20:17:15.000,not_a_number,-116.9488803,646.743,13.05,22\n"
+                    "DateTime,Lat,Lon,Altitude,Speed,SatUsed\n2026-09-22 20:17:15.000,not_a_number,-116.9488803,647,13.05,22\n"
             );
 
             assertThrows(IllegalArgumentException.class, () ->
@@ -149,8 +181,7 @@ class InputProcessingTest {
 
         try {
             Files.writeString(invalidCoordinates,
-                    "DateTime,Lat,Lon,Altitude,Speed,SatUsed\n" +
-                            "2026-09-22 20:17:15.000,95.0,-116.9488803,646.743,13.05,22\n"
+                    "DateTime,Lat,Lon,Altitude,Speed,SatUsed\n2026-09-22 20:17:15.000,95.0,-116.9488803,647,13.05,22\n"
             );
 
             assertThrows(IllegalArgumentException.class, () ->
@@ -165,8 +196,7 @@ class InputProcessingTest {
 
         try {
             Files.writeString(invalidSpeed,
-                    "DateTime,Lat,Lon,Altitude,Speed,SatUsed\n" +
-                            "2026-09-22 20:17:15.000,47.71314203,-116.9488803,646.743,-5.0,22\n"
+                    "DateTime,Lat,Lon,Altitude,Speed,SatUsed\n2026-09-22 20:17:15.000,47.71314203,-116.9488803,647,-5.0,22\n"
             );
 
             assertThrows(IllegalArgumentException.class, () ->
@@ -181,12 +211,10 @@ class InputProcessingTest {
 
         try {
             Files.writeString(duplicateFile,
-                    "DateTime,Lat,Lon,Altitude,Speed,SatUsed\n" +
-                            "2026-09-22 20:17:15.000,47.71314203,-116.9488803,646.743,13.05,22\n" +
-                            "2026-09-22 20:17:15.000,47.71414203,-116.9498803,647.743,14.05,23\n"
+                    "DateTime,Lat,Lon,Altitude,Speed,SatUsed\n2026-09-22 20:17:15.000,47.71314203,-116.9488803,647,13.05,22\n2026-09-22 20:17:15.000,47.71414203,-116.9498803,648,14.05,23\n"
             );
 
-            assertEquals(2,
+            assertEquals(1,
                     InputProcessing.readGPSLog(duplicateFile.toString()).size()
             );
         } finally {
