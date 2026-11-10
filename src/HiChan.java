@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-//
 //Should the program get the highway channel data filepath from the user as well?
 public class HiChan {
-    public static void main(String[] args) {
+     static void main(String[] args) {
         // Check if the file path is provided in args
         if (args.length != 2) {
             System.out.println("Error: Please provide the GPS log file path and the preprocessed CSV as an argument.");
@@ -16,7 +15,7 @@ public class HiChan {
 
         List<GPSLogEntry> gpsLogEntries = new ArrayList<>();
         Map<String, List<HighwaySegment>> highwaySegments = new HashMap();
-        //Filling the GPS log and highway segements
+        //Filling the GPS log and highway segments
         try {
             // Call readGPSLog from InputProcessing and store the result in gpsLogEntries
             gpsLogEntries = InputProcessing.readGPSLog(args[0]);
@@ -35,25 +34,30 @@ public class HiChan {
             highwaySegments = InputProcessing.readPreprocessedCsv("src/i90_channels.csv");
         } catch (IOException e) {
             // Handle file-related errors
-            System.out.println("Error reading the preproccessed CSV file: " + e.getMessage());
+            System.out.println("Error reading the preprocessed CSV file: " + e.getMessage());
         } catch (IllegalArgumentException e) {
             // Handle parsing-related errors
-            System.out.println("Error parsing the preproccessed CSV file: " + e.getMessage());
+            System.out.println("Error parsing the preprocessed CSV file: " + e.getMessage());
         } catch (Exception e) {
             // Catch any other unexpected exceptions
             System.out.println("An unexpected error occurred: " + e.getMessage());
         }
-
+        List<MatchedRecord> matchedRecords = new ArrayList<MatchedRecord>();
         try {
-            List<MatchedRecord> matchedRecords = HighwayMatching.matchRecords(gpsLogEntries, highwaySegments);
+           matchedRecords = HighwayMatching.matchRecords(gpsLogEntries, highwaySegments);
 
             for (MatchedRecord match : matchedRecords) {
                 System.out.println(match);
             }
         }catch(Exception e){
-            System.out.println("Error matching segement: " + e.getMessage());
+            System.out.println("Error matching segment: " + e.getMessage());
         }
-        //Need to call the output generatation and pass it arg[1]
+
+        try{
+            OutputGeneration.writeOutput(matchedRecords,args[1]);
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
 
     }
 }

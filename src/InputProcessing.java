@@ -56,15 +56,14 @@ public class InputProcessing {
                     Double begMP = Double.parseDouble(tokens[2].trim());
                     Double endMP = Double.parseDouble(tokens[3].trim());
                     int channel = Integer.parseInt(tokens[4].trim());
-
+                    if (geohash.length() != GEOHASH_PRECISION) {
+                        throw new IllegalArgumentException("Error - Invalid Format");
+                    }
                     HighwaySegment segment = new HighwaySegment(geohash, stFIPS, begMP, endMP, channel);
                     if (!highwayIndex.containsKey(geohash)) {
                         highwayIndex.put(geohash, new ArrayList<>());
                     }
                     highwayIndex.get(geohash).add(segment);
-                    if (geohash.length() != GEOHASH_PRECISION) {
-                        throw new IllegalArgumentException("Error - Invalid Format");
-                    }
                 } catch (NumberFormatException e){
                     throw new IllegalArgumentException("Error - Invalid Format",e );
                 }
