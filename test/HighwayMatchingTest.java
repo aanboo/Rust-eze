@@ -22,10 +22,12 @@ class HighwayMatchingTest {
         assertEquals("c2kx0", results.getFirst().getSegment().getGeohash());
         assertEquals("WA", results.get(0).getState());
         assertEquals(280, results.get(0).getChannel());
+        assertEquals("#I90WAEB_280", results.get(0).getChannelID());
 
         assertEquals("c2kz6", results.get(1).getSegment().getGeohash());
         assertEquals("ID", results.get(1).getState());
         assertEquals(10, results.get(1).getChannel());
+        assertEquals("#I90IDEB_10", results.get(1).getChannelID());
 
         boolean unmatchedCaught = false;
         try {

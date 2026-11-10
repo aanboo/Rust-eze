@@ -25,8 +25,8 @@ class GPSLogEntryTest {
 
     @org.junit.jupiter.api.Test
     void getAltitude() {
-        assertEquals(568, waEntry.getAltitude());
-        assertEquals(647, idEntry.getAltitude());
+        assertEquals(568.0, waEntry.getAltitude(), 0.001);
+        assertEquals(647.0, idEntry.getAltitude(), 0.001);
     }
 
     @org.junit.jupiter.api.Test

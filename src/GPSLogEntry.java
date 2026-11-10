@@ -38,6 +38,8 @@ public class GPSLogEntry {
 
     public int getSatUsed() {return sat_used;}
 
+    public String getOriginalCsvLine(){ return date_time + "," + lat + "," + lon + "," + altitude + "," + speed + "," + sat_used; }
+
     public String toString() {
         return date_time + " " + lat + " " + lon + " " + altitude + " " +speed + " " +sat_used;
     }

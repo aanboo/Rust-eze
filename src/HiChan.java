@@ -1,4 +1,5 @@
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,12 +14,15 @@ public class HiChan {
             return;
         }
 
-        List<GPSLogEntry> gpsLogEntries = new ArrayList<>();
-        Map<String, List<HighwaySegment>> highwaySegments = new HashMap();
+         String gpsPath = args[0];
+         String outputPath = args[1];
+
+         List<GPSLogEntry> gpsLogEntries = new ArrayList<>();
+        Map<String, List<HighwaySegment>> highwaySegments = new HashMap<>();
         //Filling the GPS log and highway segments
         try {
             // Call readGPSLog from InputProcessing and store the result in gpsLogEntries
-            gpsLogEntries = InputProcessing.readGPSLog(args[0]);
+            gpsLogEntries = InputProcessing.readGPSLog(gpsPath);
         } catch (IOException e) {
             // Handle file-related errors
             System.out.println("Error reading the GPS log file: " + e.getMessage());
@@ -30,8 +34,13 @@ public class HiChan {
             System.out.println("An unexpected error occurred: " + e.getMessage());
         }
         //Opening the preprocessed CSV
+         String preprocPath = "src/i90_channels.csv";
+         if (new File("i90_channels.csv").exists()) {
+             preprocPath = "i90_channels.csv";
+         }
+
         try {
-            highwaySegments = InputProcessing.readPreprocessedCsv("src/i90_channels.csv");
+            highwaySegments = InputProcessing.readPreprocessedCsv(preprocPath);
         } catch (IOException e) {
             // Handle file-related errors
             System.out.println("Error reading the preprocessed CSV file: " + e.getMessage());
@@ -42,7 +51,8 @@ public class HiChan {
             // Catch any other unexpected exceptions
             System.out.println("An unexpected error occurred: " + e.getMessage());
         }
-        List<MatchedRecord> matchedRecords = new ArrayList<MatchedRecord>();
+
+        List<MatchedRecord> matchedRecords = new ArrayList<>();
         try {
            matchedRecords = HighwayMatching.matchRecords(gpsLogEntries, highwaySegments);
 
@@ -51,12 +61,28 @@ public class HiChan {
             }
         }catch(Exception e){
             System.out.println("Error matching segment: " + e.getMessage());
+            return;
         }
 
         try{//Should we get overwrite authorization from the user or just overwrite it for now?
-            OutputGeneration.writeOutput(matchedRecords,args[1]);
-        }catch(Exception e){
-            System.out.println(e.getMessage());
+            boolean authorize = true; //yes, I believe that was the original intent we wanted
+            File out = new File(outputPath);
+
+            if (out.exists()) {
+                System.out.print("Output file already exists. Overwrite this file? (y/n): ");
+                java.util.Scanner scanner = new java.util.Scanner(System.in);
+                String response = scanner.nextLine().trim();
+                if (!response.equalsIgnoreCase("y")) {
+                    authorize = false;
+                }
+            }
+
+            String result = OutputGeneration.writeOutput(matchedRecords, outputPath, authorize);
+            if (!"SUCCESS".equals(result)) {
+                System.out.println(result);
+            }
+        } catch (Exception e) {
+            System.out.println("Error generating output: " + e.getMessage());
         }
 
     }

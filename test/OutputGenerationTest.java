@@ -34,9 +34,9 @@ class OutputGenerationTest {
             assertEquals("date time,latitude,longitude,altitude(m),speed(m/s),sat_used,ChannelID", lines.get(0));
 
             assertTrue(lines.get(1).contains("2026-09-22 20:37:41.000"));
-            assertTrue(lines.get(1).endsWith(",280"));
+            assertTrue(lines.get(1).endsWith(",#I90WAEB_280"));
             assertTrue(lines.get(2).contains("2026-09-22 20:17:15.000"));
-            assertTrue(lines.get(2).endsWith(",10"));
+            assertTrue(lines.get(2).endsWith(",#I90IDEB_10"));
             assertTrue(lines.get(3).contains("2026-09-22 20:37:41.000"));
             assertTrue(lines.get(3).endsWith(",UNKNOWN"));
 

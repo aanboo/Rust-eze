@@ -6,34 +6,56 @@ import java.util.Map;
 public class HighwayMatching {
     private static final String BASE32 = "0123456789bcdefghjkmnpqrstuvwxyz";
     private static final int GEOHASH_PRECISION = 5;
+
     public HighwayMatching(){}
+
     public static List<MatchedRecord> matchRecords(List<GPSLogEntry> gpsLogs, Map<String, List<HighwaySegment>> highwaySegments) throws IllegalArgumentException{
+        if (gpsLogs == null) {
+            throw new NullPointerException("GPS log list cannot be null");
+        }
+
         List<MatchedRecord> results = new ArrayList<>();
 
+        String currentDirection = "EB";
+        if (gpsLogs.size() > 1) {
+            if (gpsLogs.get(1).getLon() < gpsLogs.get(0).getLon()) {
+                currentDirection = "WB";
+            }
+        }
+
+        Double prevLon = null;
+
         for (GPSLogEntry gps : gpsLogs) {
+            if (prevLon != null) {
+                if (gps.getLon() > prevLon) {
+                    currentDirection = "EB";
+                } else if (gps.getLon() < prevLon) {
+                    currentDirection = "WB";
+                }
+                // When stationary, currentDirection remains unchanged
+            }
+            prevLon = gps.getLon();
+
             String hash = encodeGeohash(gps.getLat(), gps.getLon(), GEOHASH_PRECISION);
-            //takes the hash calculated from the gps log and matches it to the hashmap to find the right channel?
-            List<HighwaySegment> candidates = highwaySegments.get(hash); //returns all the hash
+            List<HighwaySegment> candidates = highwaySegments.get(hash);
 
             HighwaySegment bestMatch = null;
-
             if (candidates != null && !candidates.isEmpty()) {
                 for (HighwaySegment segment : candidates) {
-                    // Pick the segment whose geohash exactly matches the generated hash
                     if (segment.getGeohash().equals(hash)) {
-                        // Since geohashes are unique in the highway file, we can take the first exact match
                         bestMatch = segment;
                         break;
                     }
                 }
             }
-            // If we didn't find an exact match, throw an error
+
             if (bestMatch == null) {
-                System.out.println("Highway segment geohash is: "+ hash);
+                System.out.println("Highway segment geohash is: " + hash);
                 throw new IllegalArgumentException("Error - Highway segment cannot be matched");
             }
 
-            results.add(new MatchedRecord(gps, bestMatch));
+            String channelID = "#I90" + bestMatch.getSateCode() + currentDirection + "_" + bestMatch.getChannel();
+            results.add(new MatchedRecord(gps, bestMatch, channelID));
         }
 
         return results;
