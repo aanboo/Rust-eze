@@ -4,7 +4,7 @@
 | Hi_Chan - Interstate 90 GPS Highway Channel Matcher                  |
 | from Idaho to Washington                                            |
 | Team: Rust-eze | Lab 6                                              |
-| Names: Aaliyah, Martin, Mangis                                      |
+| Names: Aaliyah, Martin, Rykeam                                      |
 +---------------------------------------------------------------------+
 
 +------------------+--------------------------------------------------+
