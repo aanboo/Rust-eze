@@ -2,11 +2,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MatchedRecordTest {
 
-    private final GPSLogEntry waEntry = new GPSLogEntry("2026-09-22 20:37:41.000", 47.654030, -117.381552, 568.148, 26.41, 26.0);
-    private final GPSLogEntry idEntry = new GPSLogEntry("2026-09-22 20:17:15.000", 47.71314203, -116.9488803, 646.743, 13.05, 22.0);
+    private final GPSLogEntry waEntry = new GPSLogEntry("2026-09-22 20:37:41.000", 47.654030, -117.381552, 568, 26.41, 26);
+    private final GPSLogEntry idEntry = new GPSLogEntry("2026-09-22 20:17:15.000", 47.71314203, -116.9488803, 647, 13.05, 22);
 
-    private final HighwaySegment waSegment = new HighwaySegment("c2kx0", "WA", 278.522, 278.645, 280);
-    private final HighwaySegment idSegment = new HighwaySegment("c2kz6", "ID", 0.0, 6.825, 10);
+    private final HighwaySegment waSegment = new HighwaySegment("c2kx0", "WA", 279, 279, 280);
+    private final HighwaySegment idSegment = new HighwaySegment("c2kz6", "ID", 0, 7, 10);
 
     @org.junit.jupiter.api.Test
     void getGpsEntry() {

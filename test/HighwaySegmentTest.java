@@ -2,8 +2,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class HighwaySegmentTest {
 
-    private final HighwaySegment waSegment = new HighwaySegment("c2kx0", "WA", 278.522, 278.645, 280);
-    private final HighwaySegment idSegment = new HighwaySegment("c2kz6", "ID", 0.0, 6.825, 10);
+    private final HighwaySegment waSegment = new HighwaySegment("c2kx0", "WA", 279, 279, 280);
+    private final HighwaySegment idSegment = new HighwaySegment("c2kz6", "ID", 0, 7, 10);
 
     @org.junit.jupiter.api.Test
     void getGeohash() {
@@ -19,14 +19,14 @@ class HighwaySegmentTest {
 
     @org.junit.jupiter.api.Test
     void getBegMP() {
-        assertEquals(278.522, waSegment.getBegMP(), 0.001);
-        assertEquals(0.0, idSegment.getBegMP(), 0.001);
+        assertEquals(279, waSegment.getBegMP());
+        assertEquals(0, idSegment.getBegMP());
     }
 
     @org.junit.jupiter.api.Test
     void getEndMP() {
-        assertEquals(278.645, waSegment.getEndMP(), 0.001);
-        assertEquals(6.825, idSegment.getEndMP(), 0.001);
+        assertEquals(279, waSegment.getEndMP());
+        assertEquals(7, idSegment.getEndMP());
     }
 
     @org.junit.jupiter.api.Test
@@ -40,8 +40,8 @@ class HighwaySegmentTest {
         assertEquals("WA", waSegment.getSateCode());
         assertEquals("ID", idSegment.getSateCode());
 
-        HighwaySegment waFips = new HighwaySegment("c2kx0", "53", 278.522, 278.645, 280);
-        HighwaySegment idFips = new HighwaySegment("c2kz6", "16", 0.0, 6.825, 10);
+        HighwaySegment waFips = new HighwaySegment("c2kx0", "53", 279, 279, 280);
+        HighwaySegment idFips = new HighwaySegment("c2kz6", "16", 0, 7, 10);
 
         assertEquals("WA", waFips.getSateCode());
         assertEquals("ID", idFips.getSateCode());
