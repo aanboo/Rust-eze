@@ -9,7 +9,7 @@ import java.util.Map;
 public class HiChan {
     public static void main(String[] args) {
         // Check if the file path is provided in args
-        if (args.length != 1) {
+        if (args.length != 2) {
             System.out.println("Error: Please provide the GPS log file path and the preprocessed CSV as an argument.");
             return;
         }
@@ -53,6 +53,7 @@ public class HiChan {
         }catch(Exception e){
             System.out.println("Error matching segement: " + e.getMessage());
         }
+        //Need to call the output generatation and pass it arg[1]
 
     }
 }
