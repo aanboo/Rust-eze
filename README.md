@@ -32,7 +32,7 @@
         src/GPSLog_1.csv output.csv
     - Click Apply, then OK.
     
-2. RUNNING HI_CHAN
+3. RUNNING HI_CHAN
     - Right-click HiChan.java and click:
         Run 'HiChan.main()'
     - If output.csv already exists in the project root,
@@ -41,7 +41,7 @@
     - Once finished, check the project root folder
         for the generated output.csv file.
 
-3. RUNNING TESTS
+4. RUNNING TESTS
     - In the Project tool window,
         right-click the 'test' directory.
     - Select: Run 'All Tests'

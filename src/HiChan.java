@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 //Should the program get the highway channel data filepath from the user as well?
 public class HiChan {
-     static void main(String[] args) {
+     public void main(String[] args) {
         // Check if the file path is provided in args
         if (args.length != 2) {
             System.out.println("Error: Please provide the GPS log file path and the preprocessed CSV as an argument.");
@@ -26,12 +26,15 @@ public class HiChan {
         } catch (IOException e) {
             // Handle file-related errors
             System.out.println("Error reading the GPS log file: " + e.getMessage());
+            return;
         } catch (IllegalArgumentException e) {
             // Handle parsing-related errors
             System.out.println("Error parsing the GPS log file: " + e.getMessage());
+            return;
         } catch (Exception e) {
             // Catch any other unexpected exceptions
             System.out.println("An unexpected error occurred: " + e.getMessage());
+            return;
         }
         //Opening the preprocessed CSV
          String preprocPath = "src/i90_channels.csv";
@@ -44,12 +47,15 @@ public class HiChan {
         } catch (IOException e) {
             // Handle file-related errors
             System.out.println("Error reading the preprocessed CSV file: " + e.getMessage());
+            return;
         } catch (IllegalArgumentException e) {
             // Handle parsing-related errors
             System.out.println("Error parsing the preprocessed CSV file: " + e.getMessage());
+            return;
         } catch (Exception e) {
             // Catch any other unexpected exceptions
             System.out.println("An unexpected error occurred: " + e.getMessage());
+            return;
         }
 
         List<MatchedRecord> matchedRecords = new ArrayList<>();
