@@ -3,16 +3,19 @@
     import java.nio.file.Files;
     import java.nio.file.Path;
     import java.nio.file.Paths;
+    import java.nio.file.StandardOpenOption;
     import java.util.List;
 
 
 //This should append whatever the channelID is for each GPSLogEntry in the GPSLog_1.csv.
     public class OutputGeneration {
 
-        public static void writeOutput(List<MatchedRecord> matchedRecords, String outputFile) throws IOException{
-        if(matchedRecords == null){
-            throw new IllegalArgumentException("Matched records is null");
-        }
+        public static String writeOutput(
+                List<MatchedRecord> matchedRecords,
+                String outputFile,
+                boolean overwriteAuthorized){
+
+
 
         if(outputFile == null || outputFile.trim().isEmpty()){
             throw new IllegalArgumentException("Output file is null or empty");
