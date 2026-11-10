@@ -50,8 +50,21 @@ public class HiChan {
             for (MatchedRecord match : matchedRecords) {
                 System.out.println(match);
             }
+
+
+            String outputFile = "gps_log_output.csv";
+            String status = OutputGeneration.writeOutput(matchedRecords, outputFile, false);
+
+            if(!status.equals("SUCCESS")) {
+                System.err.println(status);
+                System.exit(1);
+            }
+
+
+
         }catch(Exception e){
-            System.out.println("Error matching segement: " + e.getMessage());
+            System.out.println("Error matching or writing records: " + e.getMessage());
+            System.exit(1);
         }
 
     }

@@ -2,6 +2,7 @@
 public class MatchedRecord {
     private final GPSLogEntry gpsEntry;
     private final HighwaySegment segment;
+    private String channelID = "UNKNOWN";
 
     public MatchedRecord(GPSLogEntry gpsEntry, HighwaySegment segment) {
         this.gpsEntry = gpsEntry;
@@ -33,6 +34,20 @@ public class MatchedRecord {
         }
         return ""; // Outputs empty field in CSV rather than arbitrary placeholder text
     }
+
+    public String getChannelID(){
+        return channelID;
+    }
+
+    public void setChannelID(String channelID){
+        if(channelID == null || channelID.trim().isEmpty()){
+            this.channelID = "UNKNOWN";
+        } else {
+            this.channelID = channelID;
+        }
+    }
+
+    @Override
     public String toString(){
         return gpsEntry + " " + segment;
     }

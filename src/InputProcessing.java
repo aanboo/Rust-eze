@@ -87,6 +87,7 @@ public class InputProcessing {
 
             String line;
             while((line = reader.readLine()) != null){
+                String originalLine = line;
                 line = line.trim();
                 if(line.isEmpty()){
                     continue;
@@ -116,7 +117,10 @@ public class InputProcessing {
                         throw new IllegalArgumentException("Invalid Speed");
                     }
 
-                    logEntries.add(new GPSLogEntry(date_time, lat, lon, altitude,speed,sat_used));
+                    GPSLogEntry entry = new GPSLogEntry(date_time, lat, lon, altitude,speed,sat_used);
+                    entry.setOriginalCsvLine(originalLine);
+                    logEntries.add(entry);
+                    //logEntries.add(new GPSLogEntry(date_time, lat, lon, altitude,speed,sat_used));
 
                 } catch (NumberFormatException e){
                     throw new IllegalArgumentException("Error - Records cannot be parsed");
