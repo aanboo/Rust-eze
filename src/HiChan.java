@@ -53,7 +53,7 @@ public class HiChan {
             System.out.println("Error matching segment: " + e.getMessage());
         }
 
-        try{
+        try{//Should we get overwrite authorization from the user or just overwrite it for now?
             OutputGeneration.writeOutput(matchedRecords,args[1]);
         }catch(Exception e){
             System.out.println(e.getMessage());

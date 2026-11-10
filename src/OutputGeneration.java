@@ -27,9 +27,6 @@ public class OutputGeneration {
             }
 
 
-//This should append the channel ID's to the GPSLOG_1.csv so it should exist.
-
-
             try (BufferedWriter writer = Files.newBufferedWriter(
                     outputPath,
                     StandardOpenOption.CREATE,
