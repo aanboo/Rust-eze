@@ -3,13 +3,6 @@
   <component name="CsvFileAttributes">
     <option name="attributeMap">
       <map>
-        <entry key="C:\Users\aaliy\OneDrive - Eastern Washington University\Documents\Software Dev class\Project Files\20260922-160725 - I90EB.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
         <entry key="\dsf\GPSLog_1.csv">
           <value>
             <Attribute>
@@ -31,6 +24,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\src\AcceptanceTest_I80EBSacramento.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\src\GPSLog_1.csv">
           <value>
             <Attribute>
@@ -46,13 +46,6 @@
           </value>
         </entry>
         <entry key="\src\i90_channels.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
-        <entry key="\src\i90_channelsShortened.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

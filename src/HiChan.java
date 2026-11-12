@@ -8,7 +8,6 @@ import java.util.Map;
 
 public class HiChan {
      public void main(String[] args) {
-        // Check if the file path is provided in args
         if (args.length != 2) {
             System.out.println("Error: Please provide the GPS log file path and the preprocessed CSV as an argument.");
             return;
@@ -25,15 +24,15 @@ public class HiChan {
             gpsLogEntries = InputProcessing.readGPSLog(gpsPath);
         } catch (IOException e) {
             // Handle file-related errors
-            System.out.println("Error reading the GPS log file: " + e.getMessage());
+            System.out.println(e.getMessage());
             return;
         } catch (IllegalArgumentException e) {
             // Handle parsing-related errors
-            System.out.println("Error parsing the GPS log file: " + e.getMessage());
+            System.out.println(e.getMessage());
             return;
         } catch (Exception e) {
             // Catch any other unexpected exceptions
-            System.out.println("An unexpected error occurred: " + e.getMessage());
+            System.out.println(e.getMessage());
             return;
         }
         //Opening the preprocessed CSV
@@ -46,15 +45,15 @@ public class HiChan {
             highwaySegments = InputProcessing.readPreprocessedCsv(preprocPath);
         } catch (IOException e) {
             // Handle file-related errors
-            System.out.println("Error reading the preprocessed CSV file: " + e.getMessage());
+            System.out.println(e.getMessage());
             return;
         } catch (IllegalArgumentException e) {
             // Handle parsing-related errors
-            System.out.println("Error parsing the preprocessed CSV file: " + e.getMessage());
+            System.out.println(e.getMessage());
             return;
         } catch (Exception e) {
             // Catch any other unexpected exceptions
-            System.out.println("An unexpected error occurred: " + e.getMessage());
+            System.out.println(e.getMessage());
             return;
         }
 
@@ -66,21 +65,26 @@ public class HiChan {
                 System.out.println(match);
             }
         }catch(Exception e){
-            System.out.println("Error matching segment: " + e.getMessage());
+            System.out.println(e.getMessage());
             return;
         }
 
         try{//Should we get overwrite authorization from the user or just overwrite it for now?
             boolean authorize = true; //yes, I believe that was the original intent we wanted
             File out = new File(outputPath);
-
+            String response = "";
             if (out.exists()) {
-                System.out.print("Output file already exists. Overwrite this file? (y/n): ");
-                java.util.Scanner scanner = new java.util.Scanner(System.in);
-                String response = scanner.nextLine().trim();
-                if (!response.equalsIgnoreCase("y")) {
-                    authorize = false;
-                }
+                do {
+                    System.out.print("Output file already exists. Overwrite this file? (y/n): ");
+                    java.util.Scanner scanner = new java.util.Scanner(System.in);
+                    response = scanner.nextLine().trim();
+                    if(!response.equalsIgnoreCase("y") || !response.equalsIgnoreCase("n"))
+                    {
+                      System.out.println("Error - invalid input enter (y/n): ");
+                    } else if (!response.equalsIgnoreCase("y")) {
+                        authorize = false;
+                    }
+                }while(!response.equalsIgnoreCase("y") || !response.equalsIgnoreCase("n"));
             }
 
             String result = OutputGeneration.writeOutput(matchedRecords, outputPath, authorize);
@@ -88,7 +92,7 @@ public class HiChan {
                 System.out.println(result);
             }
         } catch (Exception e) {
-            System.out.println("Error generating output: " + e.getMessage());
+            System.out.println(e.getMessage());
         }
 
     }
