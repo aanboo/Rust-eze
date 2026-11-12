@@ -66,7 +66,7 @@ public class OutputGeneration {
                 }
             }
 
-            System.out.println("Ouput generated successfully");
+            System.out.println("Output generated successfully");
             System.out.println("Output file: " + outputFile);
             return "SUCCESS";
         } catch (IOException | RuntimeException e) {
