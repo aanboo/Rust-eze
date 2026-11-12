@@ -78,13 +78,13 @@ public class HiChan {
                     System.out.print("Output file already exists. Overwrite this file? (y/n): ");
                     java.util.Scanner scanner = new java.util.Scanner(System.in);
                     response = scanner.nextLine().trim();
-                    if(!response.equalsIgnoreCase("y") || !response.equalsIgnoreCase("n"))
+                    if(!response.equalsIgnoreCase("y") && !response.equalsIgnoreCase("n"))
                     {
                       System.out.println("Error - invalid input enter (y/n): ");
                     } else if (!response.equalsIgnoreCase("y")) {
                         authorize = false;
                     }
-                }while(!response.equalsIgnoreCase("y") || !response.equalsIgnoreCase("n"));
+                }while(!response.equalsIgnoreCase("y") && !response.equalsIgnoreCase("n"));
             }
 
             String result = OutputGeneration.writeOutput(matchedRecords, outputPath, authorize);

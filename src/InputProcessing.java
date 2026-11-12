@@ -45,7 +45,8 @@ public class InputProcessing {
                     continue;
                 }
 
-                String[] tokens = line.split(",");
+                String[] tokens = line.split(",", -1);
+
                 if(tokens.length != HIGHWAY_EXPECTED_COLUMNS){
                     throw new IllegalArgumentException("Error - Invalid Format");
                 }
@@ -103,6 +104,10 @@ public class InputProcessing {
 
                 try{
                     String date_time = tokens[0].trim();
+                    if(date_time.isEmpty()){
+                        throw new IllegalArgumentException("Error - Records cannot be read");
+                    }
+
                     double lat = Double.parseDouble(tokens[1].trim());
                     double lon = Double.parseDouble(tokens[2].trim());
                     double altitude = Double.parseDouble(tokens[3].trim());
@@ -117,9 +122,6 @@ public class InputProcessing {
                         continue;
                     }
 
-                    if(date_time.isEmpty() ){
-                        throw new IllegalArgumentException("Error - Records cannot be read");
-                    }
                     if(lat < -90.0 || lat > 90.0 || lon < -180.0 || lon > 180.0){
                         throw new IllegalArgumentException("Error - Invalid GPS Coordinates");
                     }

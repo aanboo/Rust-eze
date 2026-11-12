@@ -29,6 +29,10 @@ class HighwayMatchingTest {
         assertEquals(10, results.get(1).getChannel());
         assertEquals("#I90IDEB_10", results.get(1).getChannelID());
 
+        GPSLogEntry unknownEntry = new GPSLogEntry("2026-09-22 20:45:00.000", 38.5816, -121.4944, 10, 20.0, 18);
+        List<MatchedRecord> unknownResults = HighwayMatching.matchRecords(List.of(unknownEntry), highwayIndex);
+        assertEquals("UNKNOWN", unknownResults.get(0).getChannelID());
+
         boolean unmatchedCaught = false;
         try {
             HighwayMatching.matchRecords(List.of(waEntry), new HashMap<>());

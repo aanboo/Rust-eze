@@ -13,6 +13,9 @@ public class HighwayMatching {
         if (gpsLogs == null) {
             throw new NullPointerException("Error - GPS log list cannot be null");
         }
+        if (highwaySegments == null || highwaySegments.isEmpty()){
+            throw new IllegalArgumentException("Error - Highway lookup map cannot be empty");
+        }
 
         List<MatchedRecord> results = new ArrayList<>();
 
