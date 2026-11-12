@@ -11,7 +11,7 @@ public class HighwayMatching {
 
     public static List<MatchedRecord> matchRecords(List<GPSLogEntry> gpsLogs, Map<String, List<HighwaySegment>> highwaySegments) throws IllegalArgumentException{
         if (gpsLogs == null) {
-            throw new NullPointerException("GPS log list cannot be null");
+            throw new NullPointerException("Error - GPS log list cannot be null");
         }
 
         List<MatchedRecord> results = new ArrayList<>();

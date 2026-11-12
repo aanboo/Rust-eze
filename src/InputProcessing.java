@@ -117,19 +117,19 @@ public class InputProcessing {
                     }
 
                     if(date_time.isEmpty() ){
-                        throw new IllegalArgumentException("Error - Records cannot be parsed");
+                        throw new IllegalArgumentException("Error - Records cannot be read");
                     }
                     if(lat < -90.0 || lat > 90.0 || lon < -180.0 || lon > 180.0){
                         throw new IllegalArgumentException("Error - Invalid GPS Coordinates");
                     }
-                    if(speed < 0 || speed > 90){
+                    if(speed < 0 || speed > 40){
                         throw new IllegalArgumentException("Error - Invalid Speed");
                     }
 
                     logEntries.add(new GPSLogEntry(date_time, lat, lon, altitude,speed,sat_used));
 
                 } catch (NumberFormatException e){
-                    throw new IllegalArgumentException("Error - Records cannot be parsed", e);
+                    throw new IllegalArgumentException("Error - Records cannot be read", e);
                 }
             }
         } catch (IOException e){

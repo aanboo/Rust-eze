@@ -72,14 +72,19 @@ public class HiChan {
         try{//Should we get overwrite authorization from the user or just overwrite it for now?
             boolean authorize = true; //yes, I believe that was the original intent we wanted
             File out = new File(outputPath);
-
+            String response = "";
             if (out.exists()) {
-                System.out.print("Output file already exists. Overwrite this file? (y/n): ");
-                java.util.Scanner scanner = new java.util.Scanner(System.in);
-                String response = scanner.nextLine().trim();
-                if (!response.equalsIgnoreCase("y")) {
-                    authorize = false;
-                }
+                do {
+                    System.out.print("Output file already exists. Overwrite this file? (y/n): ");
+                    java.util.Scanner scanner = new java.util.Scanner(System.in);
+                    response = scanner.nextLine().trim();
+                    if(!response.equalsIgnoreCase("y") || !response.equalsIgnoreCase("n"))
+                    {
+                      System.out.println("Error - invalid input enter (y/n): ");
+                    } else if (!response.equalsIgnoreCase("y")) {
+                        authorize = false;
+                    }
+                }while(!response.equalsIgnoreCase("y") || !response.equalsIgnoreCase("n"));
             }
 
             String result = OutputGeneration.writeOutput(matchedRecords, outputPath, authorize);
