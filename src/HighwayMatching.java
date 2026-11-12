@@ -48,13 +48,14 @@ public class HighwayMatching {
                     }
                 }
             }
-
+            String channelID = "";
             if (bestMatch == null) {
-                System.out.println("Highway segment geohash is: " + hash);
-                throw new IllegalArgumentException("Error - Highway segment cannot be matched");
+                channelID = null;
+            }else{
+                channelID = "#I90" + bestMatch.getSateCode() + currentDirection + "_" + bestMatch.getChannel();
+
             }
 
-            String channelID = "#I90" + bestMatch.getSateCode() + currentDirection + "_" + bestMatch.getChannel();
             results.add(new MatchedRecord(gps, bestMatch, channelID));
         }
 
