@@ -6,15 +6,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class HiChan {
-     public void main(String[] args) {
+public class  HiChan {
+     public static void main(String[] args) {
         if (args.length != 2) {
             System.out.println("Error: Please provide the GPS log file path and the preprocessed CSV as an argument.");
             return;
         }
 
          String gpsPath = args[0];
-         String outputPath = args[1];
+         String preprocPath = args[1];
+         String outputPath = "src/HiChan_Output.csv";
 
          List<GPSLogEntry> gpsLogEntries = new ArrayList<>();
         Map<String, List<HighwaySegment>> highwaySegments = new HashMap<>();
@@ -36,11 +37,11 @@ public class HiChan {
             return;
         }
         //Opening the preprocessed CSV
-         String preprocPath = "src/i90_channels.csv";
+         /*String preprocPath = "src/i90_channels.csv";
          if (new File("i90_channels.csv").exists()) {
              preprocPath = "i90_channels.csv";
          }
-
+        */
         try {
             highwaySegments = InputProcessing.readPreprocessedCsv(preprocPath);
         } catch (IOException e) {
