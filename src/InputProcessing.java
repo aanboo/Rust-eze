@@ -122,11 +122,21 @@ public class InputProcessing {
                         continue;
                     }
 
+
                     if(lat < -90.0 || lat > 90.0 || lon < -180.0 || lon > 180.0){
                         throw new IllegalArgumentException("Error - Invalid GPS Coordinates");
                     }
+
+                    if(altitude < -500 || altitude > 9000){
+                        throw new IllegalArgumentException("Error - Invalid GPS Elevation");
+                    }
+
                     if(speed < 0 || speed > 40){
                         throw new IllegalArgumentException("Error - Invalid Speed");
+                    }
+
+                    if(sat_used < 0){
+                        throw new IllegalArgumentException("Error - Invalid Satellite Count");
                     }
 
                     GPSLogEntry entry = new GPSLogEntry(date_time, lat, lon, altitude,speed,sat_used);
@@ -142,6 +152,9 @@ public class InputProcessing {
             throw new IOException("Error - Records cannot be read",e);
         }
 
+        if(logEntries.isEmpty()){
+            throw new IllegalArgumentException("Error - GPS Log is Empty");
+        }
         return logEntries;
     }
 }

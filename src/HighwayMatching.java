@@ -51,10 +51,18 @@ public class HighwayMatching {
                     }
                 }
             }
-            String channelID = "";
+
+            String channelID = "UNKNOWN";
             if (bestMatch == null) {
-                channelID = null;
-            }else{
+
+            System.err.println(
+                    "Warning - Channel ID UNKNOWN for GPS record: " +
+                            "Timestamp: " + gps.getDateTime() +
+                            ", Latitude: " + gps.getLat() +
+                            ", Longitude: " + gps.getLon()
+            );
+
+        }else{
                 channelID = "#I90" + bestMatch.getSateCode() + currentDirection + "_" + bestMatch.getChannel();
 
             }
