@@ -74,7 +74,7 @@ public class HiChanIntegrationTest {
             assertTrue(lines.get(1).contains("2026-09-22 20:37:41.000"));
             assertTrue(lines.get(1).endsWith(",#I90WAEB_280"));
             assertTrue(lines.get(2).contains("2026-09-22 20:37:46.000"));
-            assertTrue(lines.get(1).endsWith(",#I90WAEB_280"));
+            assertTrue(lines.get(2).endsWith(",#I90WAEB_280"));
         } finally {
             Files.deleteIfExists(tempGps);
             tempOut.delete();
