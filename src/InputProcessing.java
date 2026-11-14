@@ -119,7 +119,7 @@ public class InputProcessing {
                         // Print error to screen but do not throw an exception
                         System.err.println("Error - Duplicate timestamp entry detected for: " + date_time);
                         // Skip adding this duplicate entry so it never reaches any HashMap conversion later
-                        continue;
+                        //continue;
                     }
 
 
