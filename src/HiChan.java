@@ -15,7 +15,9 @@ public class  HiChan {
 
          String gpsPath = args[0];
          String preprocPath = "src/i90_channels.csv";
-         String outputPath = "src/HiChan_Output.csv";
+         String outputPath = System.getProperty(
+                 "hichan.output",
+                 "src/HiChan_Output.csv");
 
          List<GPSLogEntry> gpsLogEntries = new ArrayList<>();
         Map<String, List<HighwaySegment>> highwaySegments = new HashMap<>();

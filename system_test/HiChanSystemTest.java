@@ -42,7 +42,7 @@ public class HiChanSystemTest {
                     (answer + "\n").getBytes(
                             StandardCharsets.UTF_8)));
 
-            HiChan.main(new String[]{gpsFile, HIGHWAY});
+            HiChan.main(new String[]{gpsFile});
 
         } finally {
             System.setOut(oldOut);
