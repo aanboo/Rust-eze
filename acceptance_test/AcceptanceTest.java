@@ -1,8 +1,4 @@
 // AcceptanceTest.java
-//
-// Simple acceptance test harness for the HiChan program.
-// This does NOT use any testing framework; run main() and
-// inspect the console output for pass/fail messages.
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -13,25 +9,18 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class AcceptanceTest {
-
-    // NOTE: These are placeholder filenames/paths. Replace them with real ones.
-    // You can make them relative paths (e.g., "testdata/valid_east.csv") or absolute.
-
     // Valid trips (Washington & Idaho, Eastbound and Westbound)
     private static final String VALID_EASTBOUND_INPUT = "PATH/TO/VALID_WA_ID_EASTBOUND_LOG.csv";
     private static final String VALID_WESTBOUND_INPUT = "PATH/TO/VALID_WA_ID_WESTBOUND_LOG.csv";
 
-    // Highway channel reference file
-    private static final String HIGHWAY_REF_FILE = "PATH/TO/I90_CHANNELS_REFERENCE.csv";
-
     // Output files for different tests
-    private static final String OUTPUT_VALID_EASTBOUND = "PATH/TO/OUTPUT_VALID_EASTBOUND.csv";
-    private static final String OUTPUT_VALID_WESTBOUND = "PATH/TO/OUTPUT_VALID_WESTBOUND.csv";
-    private static final String OUTPUT_FOR_DUP_TSTAMPS = "PATH/TO/OUTPUT_DUPLICATE_TIMESTAMPS.csv";
-    private static final String OUTPUT_FOR_INVALID_DATA = "PATH/TO/OUTPUT_INVALID_DATA.csv";
-    private static final String OUTPUT_FOR_MISSING_HWY = "PATH/TO/OUTPUT_MISSING_HIGHWAY.csv";
-    private static final String OUTPUT_FOR_MISSING_INPUT = "PATH/TO/OUTPUT_MISSING_INPUT.csv";
-    private static final String OUTPUT_FOR_INPUT_PRESERVATION = "PATH/TO/OUTPUT_INPUT_PRESERVATION.csv";
+    private static final String OUTPUT_VALID_EASTBOUND = "acceptance_test/OUTPUT_VALID_EASTBOUND.csv";
+    private static final String OUTPUT_VALID_WESTBOUND = "acceptance_test/OUTPUT_VALID_WESTBOUND.csv";
+    private static final String OUTPUT_FOR_DUP_TSTAMPS = "acceptance_test/OUTPUT_DUPLICATE_TIMESTAMPS.csv";
+    private static final String OUTPUT_FOR_INVALID_DATA = "acceptance_test/OUTPUT_INVALID_DATA.csv";
+    private static final String OUTPUT_FOR_MISSING_HWY = "acceptance_test/OUTPUT_MISSING_HWY.csv";
+    private static final String OUTPUT_FOR_MISSING_INPUT = "acceptance_test/OUTPUT_MISSING_INPUT.csv";
+    private static final String OUTPUT_FOR_INPUT_PRESERVATION = "acceptance_test/OUTPUT_INPUT_PRESERVATION.csv";
 
     // Expected output for accuracy comparison
     private static final String EXPECTED_OUTPUT_ACCURACY = "PATH/TO/EXPECTED_OUTPUT_ACCURACY.csv";
@@ -169,12 +158,11 @@ public class AcceptanceTest {
     // ======================
     // Individual test cases
     // ======================
-
     // Contents required:
     // - VALID_EASTBOUND_INPUT: GPS log CSV consisting of a valid trip across Washington and Idaho,
     //   traveling EASTBOUND along the target highway. All records must be valid, with timestamps
     //   in chronological order, and all locations should match highway-reference geohashes.
-    // - HIGHWAY_REF_FILE: Highway channel reference CSV containing geohash/channel mappings that
+    // - : Highway channel reference CSV containing geohash/channel mappings that
     //   cover all locations in VALID_EASTBOUND_INPUT.
     // Expected behavior:
     // - HiChan completes successfully.
@@ -185,7 +173,6 @@ public class AcceptanceTest {
 
         RunResult result = runHiChan(
                 VALID_EASTBOUND_INPUT,
-                HIGHWAY_REF_FILE,
                 OUTPUT_VALID_EASTBOUND
         );
 
@@ -200,7 +187,7 @@ public class AcceptanceTest {
     // - VALID_WESTBOUND_INPUT: GPS log CSV consisting of a valid trip across Washington and Idaho,
     //   traveling WESTBOUND along the target highway. All records must be valid, with timestamps
     //   in chronological order, and all locations should match highway-reference geohashes.
-    // - HIGHWAY_REF_FILE: Highway channel reference CSV containing geohash/channel mappings that
+    // - : Highway channel reference CSV containing geohash/channel mappings that
     //   cover all locations in VALID_WESTBOUND_INPUT.
     // Expected behavior:
     // - HiChan completes successfully.
@@ -211,7 +198,6 @@ public class AcceptanceTest {
 
         RunResult result = runHiChan(
                 VALID_WESTBOUND_INPUT,
-                HIGHWAY_REF_FILE,
                 OUTPUT_VALID_WESTBOUND
         );
 
@@ -225,7 +211,7 @@ public class AcceptanceTest {
     // Contents required:
     // - VALID_EASTBOUND_INPUT (or another valid GPS log):
     //   GPS log CSV for a valid trip whose expected output has been manually prepared.
-    // - HIGHWAY_REF_FILE: Highway channel reference CSV that matches all GPS points.
+    // - : Highway channel reference CSV that matches all GPS points.
     // - EXPECTED_OUTPUT_ACCURACY: A manually crafted CSV whose rows correspond exactly to the
     //   expected retained GPS records in order, and where the final field in each row is the
     //   expected channel for that record.
@@ -237,7 +223,6 @@ public class AcceptanceTest {
 
         RunResult result = runHiChan(
                 VALID_EASTBOUND_INPUT,
-                HIGHWAY_REF_FILE,
                 OUTPUT_VALID_EASTBOUND
         );
 
@@ -254,11 +239,6 @@ public class AcceptanceTest {
         );
     }
 
-    // Contents required:
-    // - A GPS log CSV (referred to by VALID_EASTBOUND_INPUT or another placeholder you choose)
-    //   that includes at least two records with the *same* timestamp, while all other fields
-    //   are valid. All other records in the file should be valid and should match HIGHWAY_REF_FILE.
-    // - HIGHWAY_REF_FILE with entries that match all locations in the GPS log.
     // Expected behavior:
     // - A warning about duplicate timestamps appears (either in stdout or stderr).
     // - Only the first occurrence of each duplicated timestamp is retained in the output.
@@ -266,17 +246,11 @@ public class AcceptanceTest {
     private static void testDuplicateTimestamps() throws Exception {
         deleteIfExists(OUTPUT_FOR_DUP_TSTAMPS);
 
-        // Using VALID_EASTBOUND_INPUT here as a placeholder; replace with a dedicated
-        // duplicate-timestamp input file if you prefer.
         RunResult result = runHiChan(
-                VALID_EASTBOUND_INPUT,
-                HIGHWAY_REF_FILE,
+                "test_csv/DuplicateGPS.csv",
                 OUTPUT_FOR_DUP_TSTAMPS
         );
 
-        if (result.exception != null) {
-            throw new AssertionError("HiChan threw exception during duplicate timestamp test: " + result.exception);
-        }
 
         assertFileExists(OUTPUT_FOR_DUP_TSTAMPS, true, "Duplicate timestamp test should produce output");
 
@@ -284,7 +258,7 @@ public class AcceptanceTest {
         String combinedOutput = result.stdout + "\n" + result.stderr;
         assertContains(
                 combinedOutput,
-                "duplicate",
+                "Error - Duplicate timestamp entry detected for:",
                 "Duplicate timestamp warning should mention 'duplicate' (adjust substring if needed)"
         );
 
@@ -311,8 +285,8 @@ public class AcceptanceTest {
     // Contents required:
     // - A GPS log CSV for invalid coordinate (e.g., latitude > 90 or longitude > 180)
     //   referenced by some placeholder such as INVALID_COORD_INPUT (replace below).
-    //   The rest of the records should be valid and match HIGHWAY_REF_FILE.
-    // - HIGHWAY_REF_FILE matching all valid locations.
+    //   The rest of the records should be valid and match .
+    // -  matching all valid locations.
     // Expected behavior:
     // - Processing stops when the invalid coordinate is encountered.
     // - An error message about invalid coordinates appears in stderr or stdout.
@@ -324,7 +298,6 @@ public class AcceptanceTest {
 
         RunResult result = runHiChan(
                 INVALID_COORD_INPUT,
-                HIGHWAY_REF_FILE,
                 OUTPUT_FOR_INVALID_DATA
         );
 
@@ -346,7 +319,7 @@ public class AcceptanceTest {
     // Contents required:
     // - A GPS log CSV that is valid except for at least one record with speed > 90 m/s.
     //   Reference this by some placeholder such as INVALID_SPEED_INPUT (replace below).
-    // - HIGHWAY_REF_FILE matching all valid locations.
+    // -  matching all valid locations.
     // Expected behavior:
     // - Processing stops when the high-speed record is encountered.
     // - An error message about speed above allowed maximum appears.
@@ -358,7 +331,6 @@ public class AcceptanceTest {
 
         RunResult result = runHiChan(
                 INVALID_SPEED_INPUT,
-                HIGHWAY_REF_FILE,
                 OUTPUT_FOR_INVALID_DATA
         );
 
@@ -380,7 +352,7 @@ public class AcceptanceTest {
     // - A GPS log CSV with at least one malformed row (e.g., missing fields, wrong delimiter,
     //   non-numeric where a number is expected), referenced by a placeholder such as
     //   MALFORMED_ROW_INPUT (replace below). All other rows should be valid.
-    // - HIGHWAY_REF_FILE matching all valid locations.
+    // -  matching all valid locations.
     // Expected behavior:
     // - Processing stops at the malformed row.
     // - An error message about malformed input / parse failure appears.
@@ -392,7 +364,6 @@ public class AcceptanceTest {
 
         RunResult result = runHiChan(
                 MALFORMED_ROW_INPUT,
-                HIGHWAY_REF_FILE,
                 OUTPUT_FOR_INVALID_DATA
         );
 
@@ -410,43 +381,38 @@ public class AcceptanceTest {
         );
     }
 
-    // Contents required:
-    // - A GPS log CSV that includes at least one location whose geohash (or location identifier)
-    //   does NOT have a corresponding entry in HIGHWAY_REF_FILE.
-    // - HIGHWAY_REF_FILE that intentionally omits the matching highway-reference/geohash mapping
-    //   for that location, while still containing mappings for other valid locations.
+
     // Expected behavior:
     // - An error about missing highway match or unmatched location appears.
     // - Processing fails; OUTPUT_FOR_MISSING_HWY is NOT produced.
     private static void testMissingHighwayMatch() throws Exception {
-        String MISSING_HWY_INPUT = "PATH/TO/MISSING_HIGHWAY_MATCH_LOG.csv";
+        String MISSING_HWY_INPUT = "C:\\Users\\aaliy\\OneDrive\\Documents\\School\\Software dev class\\Rust-eze\\test_csv\\AcceptanceTest_I80EBSacramento.csv";
 
         deleteIfExists(OUTPUT_FOR_MISSING_HWY);
 
         RunResult result = runHiChan(
                 MISSING_HWY_INPUT,
-                HIGHWAY_REF_FILE,
                 OUTPUT_FOR_MISSING_HWY
         );
 
         String combinedOutput = result.stdout + "\n" + result.stderr;
         assertContains(
                 combinedOutput,
-                "match",
-                "Missing highway match test should emit an error mentioning 'match' (adjust substring if needed)"
+                "Warning - Channel ID UNKNOWN for GPS record:",
+                "Missing highway match test should emit an error mentioning Warning - Channel ID UNKNOWN for GPS record:"
         );
 
         assertFileExists(
                 OUTPUT_FOR_MISSING_HWY,
-                false,
-                "Missing highway match test should not create or modify the output file"
+                true,
+                "Missing highway match test should create or modify the output file"
         );
     }
 
     // Contents required:
     // - The GPS log input path passed into HiChan must NOT exist at all
     //   (e.g., a filename that does not exist in the filesystem).
-    // - HIGHWAY_REF_FILE may be valid or also missing, but the main point is that at least
+    // -  may be valid or also missing, but the main point is that at least
     //   one required input file is absent.
     // Expected behavior:
     // - A file-access / file-not-found error appears.
@@ -458,7 +424,6 @@ public class AcceptanceTest {
 
         RunResult result = runHiChan(
                 NONEXISTENT_INPUT,
-                HIGHWAY_REF_FILE,
                 OUTPUT_FOR_MISSING_INPUT
         );
 

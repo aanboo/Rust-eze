@@ -8,17 +8,19 @@ import java.util.Map;
 
 public class  HiChan {
      public static void main(String[] args) {
-        if (args.length != 1) {
+        //There's an option for 2 arguments if the
+         if (args.length < 1 || args.length > 2) {
             System.out.println("Error: Please provide the GPS log file path as an argument.");
             return;
         }
-
          String gpsPath = args[0];
          String preprocPath = "src/i90_channels.csv";
          String outputPath = System.getProperty(
                  "hichan.output",
                  "src/HiChan_Output.csv");
-
+        if(args.length == 2){
+            outputPath = System.getProperty("hichan.output",args[1]);
+        }
          List<GPSLogEntry> gpsLogEntries = new ArrayList<>();
         Map<String, List<HighwaySegment>> highwaySegments = new HashMap<>();
         //Filling the GPS log and highway segments
