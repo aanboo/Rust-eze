@@ -150,14 +150,14 @@ public class HiChanIntegrationTest {
 
         try {
             // Missing input file
-            HiChan.main(new String[]{"this_file_does_not_exist.csv", tempOut.getPath()});
+            HiChan.main(new String[]{"this_file_does_not_exist.csv", "src/i90_channels.csv", tempOut.getPath()});
             assertFalse(tempOut.exists());
 
             // Malformed CSV file
             Files.writeString(malformedGps,
                     "DateTime,Lat,Lon,Altitude,Speed,SatUsed\n2026-09-22 20:17:15.000,not_a_number,-116.9488803,647,13.05,22\n"
             );
-            HiChan.main(new String[]{malformedGps.toString(), tempOut.getPath()});
+            HiChan.main(new String[]{malformedGps.toString(), "src/i90_channels.csv", tempOut.getPath()});
             assertFalse(tempOut.exists());
         } finally {
             Files.deleteIfExists(malformedGps);
@@ -175,7 +175,7 @@ public class HiChanIntegrationTest {
                     "DateTime,Lat,Lon,Altitude,Speed,SatUsed\n2026-09-22 20:37:41.000,47.654030,-117.381552,568,26.41,26\n"
             );
 
-            HiChan.main(new String[]{tempGps.toString(), badOutput.getPath()});
+            HiChan.main(new String[]{tempGps.toString(), "src/i90_channels.csv", badOutput.getPath()});
             assertFalse(badOutput.exists());
         } finally {
             Files.deleteIfExists(tempGps);
@@ -204,7 +204,7 @@ public class HiChanIntegrationTest {
             Files.writeString(tempGps, originalGps);
             String originalChannels = Files.readString(Path.of(preprocPath));
 
-            HiChan.main(new String[]{tempGps.toString(), tempOut.getPath()});
+            HiChan.main(new String[]{tempGps.toString(), "src/i90_channels.csv", tempOut.getPath()});
 
             assertTrue(tempOut.exists());
             assertEquals(originalGps, Files.readString(tempGps));

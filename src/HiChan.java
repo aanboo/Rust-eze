@@ -1,4 +1,3 @@
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -7,19 +6,19 @@ import java.util.List;
 import java.util.Map;
 
 public class  HiChan {
-     public static void main(String[] args) {
-        if (args.length != 1) {
-            System.out.println("Error: Please provide the GPS log file path as an argument.");
+    public static void main(String[] args) {
+        if (args.length < 2 || args.length > 3) {
+            System.out.println("Error: Please provide the GPS log file path and the preprocessed CSV as an argument.");
             return;
         }
 
-         String gpsPath = args[0];
-         String preprocPath = "src/i90_channels.csv";
-         String outputPath = System.getProperty(
-                 "hichan.output",
-                 "src/HiChan_Output.csv");
+        String gpsPath = args[0];
+        String preprocPath = args[1];
+        String outputPath = (args.length == 3)
+                ? args[2]
+                : System.getProperty("hichan.output", "src/HiChan_Output.csv");
 
-         List<GPSLogEntry> gpsLogEntries = new ArrayList<>();
+        List<GPSLogEntry> gpsLogEntries = new ArrayList<>();
         Map<String, List<HighwaySegment>> highwaySegments = new HashMap<>();
         //Filling the GPS log and highway segments
         try {
@@ -39,11 +38,6 @@ public class  HiChan {
             return;
         }
         //Opening the preprocessed CSV
-         /*String preprocPath = "src/i90_channels.csv";
-         if (new File("i90_channels.csv").exists()) {
-             preprocPath = "i90_channels.csv";
-         }
-        */
         try {
             highwaySegments = InputProcessing.readPreprocessedCsv(preprocPath);
         } catch (IOException e) {
@@ -62,24 +56,32 @@ public class  HiChan {
 
         List<MatchedRecord> matchedRecords = new ArrayList<>();
         try {
-           matchedRecords = HighwayMatching.matchRecords(gpsLogEntries, highwaySegments);
+            matchedRecords = HighwayMatching.matchRecords(gpsLogEntries, highwaySegments);
+
+            for (MatchedRecord match : matchedRecords) {
+                System.out.println(match);
+            }
         }catch(Exception e){
             System.out.println(e.getMessage());
             return;
         }
 
-        try{
-            boolean authorize = true;
+        try{//Should we get overwrite authorization from the user or just overwrite it for now?
+            boolean authorize = true; //yes, I believe that was the original intent we wanted
             File out = new File(outputPath);
             String response = "";
             if (out.exists()) {
+                java.util.Scanner scanner = new java.util.Scanner(System.in);
                 do {
                     System.out.print("Output file already exists. Overwrite this file? (y/n): ");
-                    java.util.Scanner scanner = new java.util.Scanner(System.in);
+                    if (!scanner.hasNextLine()) {
+                        authorize = false;
+                        break;
+                    }
                     response = scanner.nextLine().trim();
                     if(!response.equalsIgnoreCase("y") && !response.equalsIgnoreCase("n"))
                     {
-                      System.out.println("Error - invalid input enter (y/n): ");
+                        System.out.println("Error - invalid input enter (y/n): ");
                     } else if (!response.equalsIgnoreCase("y")) {
                         authorize = false;
                     }
@@ -96,6 +98,3 @@ public class  HiChan {
 
     }
 }
-
-
-

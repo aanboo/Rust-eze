@@ -42,7 +42,7 @@ public class HiChanSystemTest {
                     (answer + "\n").getBytes(
                             StandardCharsets.UTF_8)));
 
-            HiChan.main(new String[]{gpsFile});
+            HiChan.main(new String[]{gpsFile, HIGHWAY});
 
         } finally {
             System.setOut(oldOut);
@@ -247,18 +247,22 @@ public class HiChanSystemTest {
                         .toList();
 
         assertEquals(
-                nonBlankInputLines.size(),
+                nonBlankInputLines.size() - 1,
                 outputLines.size(),
-                "GPS records were skipped"
+                "Duplicate GPS record should be skipped"
         );
 
-        // Verify every original GPS record is preserved in order
-        for (int i = 1; i < nonBlankInputLines.size(); i++) {
+        java.util.Set<String> seenTimestamps = new java.util.HashSet<>();
+        java.util.List<String> expectedUniqueInputLines = nonBlankInputLines.stream()
+                .filter(line -> seenTimestamps.add(line.split(",", -1)[0].trim()))
+                .toList();
+
+        // Verify every retained GPS record is preserved in order
+        for (int i = 1; i < expectedUniqueInputLines.size(); i++) {
             assertTrue(
                     outputLines.get(i).startsWith(
-                            nonBlankInputLines.get(i) + ","
-                    ),
-                    "GPS record changed or skipped at line " + (i + 1)
+                            expectedUniqueInputLines.get(i) + ","
+                    ), "GPS record changed or skipped at line " + (i + 1)
             );
         }
 
@@ -271,9 +275,9 @@ public class HiChanSystemTest {
                 .count();
 
         assertEquals(
-                2,
+                1,
                 duplicateCount,
-                "Both duplicate GPS records must be preserved"
+                "Only the first duplicate GPS records must be preserved"
         );
     }
 

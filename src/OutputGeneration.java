@@ -60,8 +60,13 @@ public class OutputGeneration {
                         channelID = "UNKNOWN";
                     }
 
-                    writer.write(
-                            gps.getOriginalCsvLine() + "," + channelID);
+                    String csvLine = gps.getOriginalCsvLine();
+                    if (csvLine == null) {
+                        csvLine = gps.getDateTime() + "," + gps.getLat() + "," + gps.getLon()
+                                + "," + gps.getAltitude() + "," + gps.getSpeed() + "," + gps.getSatUsed();
+                    }
+                    writer.write(csvLine + "," + channelID);
+
                     writer.newLine();
                 }
             }
