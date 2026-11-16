@@ -20,6 +20,12 @@
 # Run Instructions for Hi_Chan
 
 ```text
+Running Via command Line
+1. Navigate to the source folder. (cd ./src)
+2. Run javac HiChan.java
+3.Run java HiChan "GPSLog path" "Preprocessed CSV Path" "Output CSV Path"(optional)
+4. If no third argument is provided then the output file name will default to output.csv.
+Running Via Intellij shortcuts:
 1. BUILDING IN INTELLIJ
     - Open the root project folder in IntelliJ IDEA.
     - From the top menu, select:
@@ -29,8 +35,8 @@
     - Go to Run -> Edit Configurations...
     - Under Application, select HiChan
     - In the Program arguments field, enter:
-        src/GPSLog_1.csv src/I90channels.csv src/outputname.csv(optional)
-    - If no ouputname.csv is entered output.csv will be the default name
+        "GPSLog Path" "Preprocessed CSV Path" "Output CSV Path"(optional)
+    - If no outputname.csv is entered output.csv will be the default name
     - Click Apply, then OK.
     
 3. RUNNING HI_CHAN
