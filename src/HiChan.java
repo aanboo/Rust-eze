@@ -59,7 +59,7 @@ public class  HiChan {
             matchedRecords = HighwayMatching.matchRecords(gpsLogEntries, highwaySegments);
 
             for (MatchedRecord match : matchedRecords) {
-                System.out.println(match);
+                //System.out.println(match);
             }
         }catch(Exception e){
             System.out.println(e.getMessage());

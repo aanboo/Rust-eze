@@ -10,8 +10,9 @@ import java.nio.file.Paths;
 
 public class AcceptanceTest {
     // Valid trips (Washington & Idaho, Eastbound and Westbound)
-    private static final String VALID_EASTBOUND_INPUT = "PATH/TO/VALID_WA_ID_EASTBOUND_LOG.csv";
-    private static final String VALID_WESTBOUND_INPUT = "PATH/TO/VALID_WA_ID_WESTBOUND_LOG.csv";
+    private static final String VALID_EASTBOUND_INPUT = "src/GPSLog_2.csv";
+    private static final String VALID_EASTBOUND_INPUT1 = "test_csv/GPSLog_2.csv";
+    private static final String VALID_WESTBOUND_INPUT = "src/GPSLog_1.csv";
 
     // Output files for different tests
     private static final String OUTPUT_VALID_EASTBOUND = "acceptance_test/OUTPUT_VALID_EASTBOUND.csv";
@@ -21,9 +22,6 @@ public class AcceptanceTest {
     private static final String OUTPUT_FOR_MISSING_HWY = "acceptance_test/OUTPUT_MISSING_HWY.csv";
     private static final String OUTPUT_FOR_MISSING_INPUT = "acceptance_test/OUTPUT_MISSING_INPUT.csv";
     private static final String OUTPUT_FOR_INPUT_PRESERVATION = "acceptance_test/OUTPUT_INPUT_PRESERVATION.csv";
-
-    // Expected output for accuracy comparison
-    private static final String EXPECTED_OUTPUT_ACCURACY = "PATH/TO/EXPECTED_OUTPUT_ACCURACY.csv";
 
     // Inputs used for input-preservation test
     private static final String PRESERVATION_INPUT_GPS_LOG = "PATH/TO/PRESERVATION_GPS_LOG.csv";
@@ -156,14 +154,6 @@ public class AcceptanceTest {
     }
 
     // ======================
-    // Individual test cases
-    // ======================
-    // Contents required:
-    // - VALID_EASTBOUND_INPUT: GPS log CSV consisting of a valid trip across Washington and Idaho,
-    //   traveling EASTBOUND along the target highway. All records must be valid, with timestamps
-    //   in chronological order, and all locations should match highway-reference geohashes.
-    // - : Highway channel reference CSV containing geohash/channel mappings that
-    //   cover all locations in VALID_EASTBOUND_INPUT.
     // Expected behavior:
     // - HiChan completes successfully.
     // - OUTPUT_VALID_EASTBOUND is created and contains a retained row for each valid GPS record
@@ -172,7 +162,7 @@ public class AcceptanceTest {
         deleteIfExists(OUTPUT_VALID_EASTBOUND);
 
         RunResult result = runHiChan(
-                VALID_EASTBOUND_INPUT,
+                VALID_EASTBOUND_INPUT,"src/i90_channels.csv",
                 OUTPUT_VALID_EASTBOUND
         );
 
@@ -183,12 +173,6 @@ public class AcceptanceTest {
         assertFileExists(OUTPUT_VALID_EASTBOUND, true, "Valid eastbound trip should produce output");
     }
 
-    // Contents required:
-    // - VALID_WESTBOUND_INPUT: GPS log CSV consisting of a valid trip across Washington and Idaho,
-    //   traveling WESTBOUND along the target highway. All records must be valid, with timestamps
-    //   in chronological order, and all locations should match highway-reference geohashes.
-    // - : Highway channel reference CSV containing geohash/channel mappings that
-    //   cover all locations in VALID_WESTBOUND_INPUT.
     // Expected behavior:
     // - HiChan completes successfully.
     // - OUTPUT_VALID_WESTBOUND is created and contains retained rows for each valid GPS record
@@ -197,7 +181,7 @@ public class AcceptanceTest {
         deleteIfExists(OUTPUT_VALID_WESTBOUND);
 
         RunResult result = runHiChan(
-                VALID_WESTBOUND_INPUT,
+                VALID_WESTBOUND_INPUT,"src/i90_channels.csv",
                 OUTPUT_VALID_WESTBOUND
         );
 
@@ -208,10 +192,7 @@ public class AcceptanceTest {
         assertFileExists(OUTPUT_VALID_WESTBOUND, true, "Valid westbound trip should produce output");
     }
 
-    // Contents required:
-    // - VALID_EASTBOUND_INPUT (or another valid GPS log):
-    //   GPS log CSV for a valid trip whose expected output has been manually prepared.
-    // - : Highway channel reference CSV that matches all GPS points.
+
     // - EXPECTED_OUTPUT_ACCURACY: A manually crafted CSV whose rows correspond exactly to the
     //   expected retained GPS records in order, and where the final field in each row is the
     //   expected channel for that record.
@@ -222,7 +203,7 @@ public class AcceptanceTest {
         deleteIfExists(OUTPUT_VALID_EASTBOUND);
 
         RunResult result = runHiChan(
-                VALID_EASTBOUND_INPUT,
+                VALID_EASTBOUND_INPUT1,"src/i90_channels.csv",
                 OUTPUT_VALID_EASTBOUND
         );
 
@@ -233,7 +214,7 @@ public class AcceptanceTest {
         assertFileExists(OUTPUT_VALID_EASTBOUND, true, "Accuracy test should produce output");
 
         assertFileContentEquals(
-                EXPECTED_OUTPUT_ACCURACY,
+                "test_csv/ExpectedOuputAccE.csv",
                 OUTPUT_VALID_EASTBOUND,
                 "Output CSV must match expected CSV exactly"
         );
@@ -247,7 +228,7 @@ public class AcceptanceTest {
         deleteIfExists(OUTPUT_FOR_DUP_TSTAMPS);
 
         RunResult result = runHiChan(
-                "test_csv/DuplicateGPS.csv",
+                "test_csv/DuplicateGPS.csv","src/i90_channels.csv",
                 OUTPUT_FOR_DUP_TSTAMPS
         );
 
@@ -297,7 +278,7 @@ public class AcceptanceTest {
         deleteIfExists(OUTPUT_FOR_INVALID_DATA);
 
         RunResult result = runHiChan(
-                INVALID_COORD_INPUT,
+                INVALID_COORD_INPUT,"src/i90_channels.csv",
                 OUTPUT_FOR_INVALID_DATA
         );
 
@@ -330,7 +311,7 @@ public class AcceptanceTest {
         deleteIfExists(OUTPUT_FOR_INVALID_DATA);
 
         RunResult result = runHiChan(
-                INVALID_SPEED_INPUT,
+                INVALID_SPEED_INPUT,"src/i90_channels.csv",
                 OUTPUT_FOR_INVALID_DATA
         );
 
@@ -363,7 +344,7 @@ public class AcceptanceTest {
         deleteIfExists(OUTPUT_FOR_INVALID_DATA);
 
         RunResult result = runHiChan(
-                MALFORMED_ROW_INPUT,
+                MALFORMED_ROW_INPUT,"src/i90_channels.csv",
                 OUTPUT_FOR_INVALID_DATA
         );
 
@@ -391,7 +372,7 @@ public class AcceptanceTest {
         deleteIfExists(OUTPUT_FOR_MISSING_HWY);
 
         RunResult result = runHiChan(
-                MISSING_HWY_INPUT,
+                MISSING_HWY_INPUT,"src/i90_channels.csv",
                 OUTPUT_FOR_MISSING_HWY
         );
 
@@ -423,7 +404,7 @@ public class AcceptanceTest {
         deleteIfExists(OUTPUT_FOR_MISSING_INPUT);
 
         RunResult result = runHiChan(
-                NONEXISTENT_INPUT,
+                NONEXISTENT_INPUT,"src/i90_channels.csv",
                 OUTPUT_FOR_MISSING_INPUT
         );
 

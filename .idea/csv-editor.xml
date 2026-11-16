@@ -24,6 +24,20 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\acceptance_test\OUTPUT_VALID_EASTBOUND.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\acceptance_test\OUTPUT_VALID_WESTBOUND.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\dsf\GPSLog_1.csv">
           <value>
             <Attribute>
@@ -32,6 +46,27 @@
           </value>
         </entry>
         <entry key="\dsf\i90_channels.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\out\production\Rust-eze\HiChan_Output.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\out\test\Rust-eze\OUTPUT_VALID_EASTBOUND.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\out\test\Rust-eze\OUTPUT_VALID_WESTBOUND.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
@@ -94,6 +129,27 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\test_csv\ExpectedOuputAccE.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\test_csv\ExpectedOuputAccW.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\test_csv\GPSLog_2.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\test_csv\InvalidCoordinates.csv">
           <value>
             <Attribute>
@@ -130,6 +186,20 @@
           </value>
         </entry>
         <entry key="\test_csv\UnmatchedGPS.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\test_csv\ValidEastBoundInput.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\test_csv\ValidWestBoundInput.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
