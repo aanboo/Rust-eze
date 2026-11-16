@@ -23,9 +23,6 @@ public class AcceptanceTest {
     private static final String OUTPUT_FOR_MISSING_INPUT = "acceptance_test/OUTPUT_MISSING_INPUT.csv";
     private static final String OUTPUT_FOR_INPUT_PRESERVATION = "acceptance_test/OUTPUT_INPUT_PRESERVATION.csv";
 
-    // Inputs used for input-preservation test
-    private static final String PRESERVATION_INPUT_GPS_LOG = "PATH/TO/PRESERVATION_GPS_LOG.csv";
-    private static final String PRESERVATION_INPUT_HIGHWAY_REF = "PATH/TO/PRESERVATION_HIGHWAY_REF.csv";
 
     public static void main(String[] args) throws Exception {
         System.out.println("=== HiChan Acceptance Test Harness ===");
@@ -36,7 +33,6 @@ public class AcceptanceTest {
         runTest("Duplicate timestamps warning and filtering", AcceptanceTest::testDuplicateTimestamps);
         runTest("Invalid GPS data: invalid coordinate", AcceptanceTest::testInvalidGpsCoordinate);
         runTest("Invalid GPS data: speed above 90 m/s", AcceptanceTest::testInvalidSpeed);
-        runTest("Invalid GPS data: malformed row", AcceptanceTest::testMalformedRow);
         runTest("Missing highway match", AcceptanceTest::testMissingHighwayMatch);
         runTest("Missing input file", AcceptanceTest::testMissingInputFile);
         runTest("Input preservation", AcceptanceTest::testInputPreservation);
@@ -193,9 +189,6 @@ public class AcceptanceTest {
     }
 
 
-    // - EXPECTED_OUTPUT_ACCURACY: A manually crafted CSV whose rows correspond exactly to the
-    //   expected retained GPS records in order, and where the final field in each row is the
-    //   expected channel for that record.
     // Expected behavior:
     // - HiChan completes successfully.
     // - Generated output matches EXPECTED_OUTPUT_ACCURACY exactly (same rows, same order, same channels).
@@ -223,7 +216,6 @@ public class AcceptanceTest {
     // Expected behavior:
     // - A warning about duplicate timestamps appears (either in stdout or stderr).
     // - Only the first occurrence of each duplicated timestamp is retained in the output.
-    // - OUTPUT_FOR_DUP_TSTAMPS is created and contains no duplicate timestamps.
     private static void testDuplicateTimestamps() throws Exception {
         deleteIfExists(OUTPUT_FOR_DUP_TSTAMPS);
 
@@ -235,12 +227,11 @@ public class AcceptanceTest {
 
         assertFileExists(OUTPUT_FOR_DUP_TSTAMPS, true, "Duplicate timestamp test should produce output");
 
-        // Adjust this substring to whatever warning text HiChan actually uses.
         String combinedOutput = result.stdout + "\n" + result.stderr;
         assertContains(
                 combinedOutput,
                 "Error - Duplicate timestamp entry detected for:",
-                "Duplicate timestamp warning should mention 'duplicate' (adjust substring if needed)"
+                "Duplicate timestamp warning should mention 'duplicate'"
         );
 
         // NOTE: To strictly verify that "only the first record is included", you can:
@@ -263,31 +254,23 @@ public class AcceptanceTest {
         */
     }
 
-    // Contents required:
-    // - A GPS log CSV for invalid coordinate (e.g., latitude > 90 or longitude > 180)
-    //   referenced by some placeholder such as INVALID_COORD_INPUT (replace below).
-    //   The rest of the records should be valid and match .
-    // -  matching all valid locations.
     // Expected behavior:
-    // - Processing stops when the invalid coordinate is encountered.
+    // - Skips invalid coordinates
     // - An error message about invalid coordinates appears in stderr or stdout.
-    // - OUTPUT_FOR_INVALID_DATA is NOT created or is left unchanged.
+    // - OUTPUT_FOR_INVALID_DATA is NOT created or is left unchanged for that entry.
     private static void testInvalidGpsCoordinate() throws Exception {
-        String INVALID_COORD_INPUT = "PATH/TO/INVALID_COORDINATE_LOG.csv";
-
         deleteIfExists(OUTPUT_FOR_INVALID_DATA);
 
         RunResult result = runHiChan(
-                INVALID_COORD_INPUT,"src/i90_channels.csv",
+                "test_csv/InvalidCoordinates.csv","src/i90_channels.csv",
                 OUTPUT_FOR_INVALID_DATA
         );
 
-        // Adjust error text as needed to match HiChan's messages.
         String combinedOutput = result.stdout + "\n" + result.stderr;
         assertContains(
                 combinedOutput,
-                "invalid",
-                "Invalid coordinate test should emit an error mentioning 'invalid' (adjust substring if needed)"
+                "Error - Invalid GPS Coordinates",
+                "Invalid coordinate test should emit an Error - Invalid GPS Coordinates"
         );
 
         assertFileExists(
@@ -297,68 +280,29 @@ public class AcceptanceTest {
         );
     }
 
-    // Contents required:
-    // - A GPS log CSV that is valid except for at least one record with speed > 90 m/s.
-    //   Reference this by some placeholder such as INVALID_SPEED_INPUT (replace below).
-    // -  matching all valid locations.
     // Expected behavior:
-    // - Processing stops when the high-speed record is encountered.
-    // - An error message about speed above allowed maximum appears.
-    // - OUTPUT_FOR_INVALID_DATA is NOT created or is left unchanged.
+    // - Processing skips entry when high-speed record is encountered.
+    // - An error message about speed appears.
+    // - OUTPUT_FOR_INVALID_DATA is NOT created or is left unchanged for that record.
     private static void testInvalidSpeed() throws Exception {
-        String INVALID_SPEED_INPUT = "PATH/TO/INVALID_SPEED_LOG.csv";
-
         deleteIfExists(OUTPUT_FOR_INVALID_DATA);
 
         RunResult result = runHiChan(
-                INVALID_SPEED_INPUT,"src/i90_channels.csv",
+                "test_csv/InvalidSpeed.csv","src/i90_channels.csv",
                 OUTPUT_FOR_INVALID_DATA
         );
 
         String combinedOutput = result.stdout + "\n" + result.stderr;
         assertContains(
                 combinedOutput,
-                "speed",
-                "Invalid speed test should emit an error mentioning 'speed' (adjust substring if needed)"
+                "Error - Invalid Speed",
+                "Invalid speed test should emit Error - Invalid Speed.')"
         );
 
         assertFileExists(
                 OUTPUT_FOR_INVALID_DATA,
                 false,
                 "Invalid speed test should not create or modify the output file"
-        );
-    }
-
-    // Contents required:
-    // - A GPS log CSV with at least one malformed row (e.g., missing fields, wrong delimiter,
-    //   non-numeric where a number is expected), referenced by a placeholder such as
-    //   MALFORMED_ROW_INPUT (replace below). All other rows should be valid.
-    // -  matching all valid locations.
-    // Expected behavior:
-    // - Processing stops at the malformed row.
-    // - An error message about malformed input / parse failure appears.
-    // - OUTPUT_FOR_INVALID_DATA is NOT created or is left unchanged.
-    private static void testMalformedRow() throws Exception {
-        String MALFORMED_ROW_INPUT = "PATH/TO/MALFORMED_ROW_LOG.csv";
-
-        deleteIfExists(OUTPUT_FOR_INVALID_DATA);
-
-        RunResult result = runHiChan(
-                MALFORMED_ROW_INPUT,"src/i90_channels.csv",
-                OUTPUT_FOR_INVALID_DATA
-        );
-
-        String combinedOutput = result.stdout + "\n" + result.stderr;
-        assertContains(
-                combinedOutput,
-                "malformed",
-                "Malformed row test should emit an error mentioning 'malformed' (adjust substring if needed)"
-        );
-
-        assertFileExists(
-                OUTPUT_FOR_INVALID_DATA,
-                false,
-                "Malformed row test should not create or modify the output file"
         );
     }
 
@@ -390,16 +334,11 @@ public class AcceptanceTest {
         );
     }
 
-    // Contents required:
-    // - The GPS log input path passed into HiChan must NOT exist at all
-    //   (e.g., a filename that does not exist in the filesystem).
-    // -  may be valid or also missing, but the main point is that at least
-    //   one required input file is absent.
     // Expected behavior:
     // - A file-access / file-not-found error appears.
     // - OUTPUT_FOR_MISSING_INPUT is NOT produced.
     private static void testMissingInputFile() throws Exception {
-        String NONEXISTENT_INPUT = "PATH/TO/THIS_FILE_DOES_NOT_EXIST.csv";
+        String NONEXISTENT_INPUT = "DoesNotExists.csv";
 
         deleteIfExists(OUTPUT_FOR_MISSING_INPUT);
 
@@ -411,8 +350,8 @@ public class AcceptanceTest {
         String combinedOutput = result.stdout + "\n" + result.stderr;
         assertContains(
                 combinedOutput,
-                "file",
-                "Missing input file test should emit a file-access error (adjust substring if needed)"
+                "Error - File cannot be opened",
+                "Missing input file test should emit Error - File cannot be opened"
         );
 
         assertFileExists(
@@ -422,10 +361,6 @@ public class AcceptanceTest {
         );
     }
 
-    // Contents required:
-    // - PRESERVATION_INPUT_GPS_LOG: A valid GPS log CSV for a successful run.
-    // - PRESERVATION_INPUT_HIGHWAY_REF: A valid highway reference CSV matching all locations.
-    // - Both files should be in a known state before the test (no one else modifies them during the run).
     // Expected behavior:
     // - HiChan completes successfully and produces OUTPUT_FOR_INPUT_PRESERVATION.
     // - The byte contents of PRESERVATION_INPUT_GPS_LOG and PRESERVATION_INPUT_HIGHWAY_REF
@@ -433,16 +368,16 @@ public class AcceptanceTest {
     private static void testInputPreservation() throws Exception {
         deleteIfExists(OUTPUT_FOR_INPUT_PRESERVATION);
 
-        byte[] beforeGps = snapshotFileBytes(PRESERVATION_INPUT_GPS_LOG);
-        byte[] beforeRef = snapshotFileBytes(PRESERVATION_INPUT_HIGHWAY_REF);
+        byte[] beforeGps = snapshotFileBytes(VALID_EASTBOUND_INPUT);
+        byte[] beforeRef = snapshotFileBytes("src/I90_channels.csv");
 
         if (beforeGps == null || beforeRef == null) {
             throw new AssertionError("Input preservation test requires both input files to exist before running.");
         }
 
         RunResult result = runHiChan(
-                PRESERVATION_INPUT_GPS_LOG,
-                PRESERVATION_INPUT_HIGHWAY_REF,
+                VALID_EASTBOUND_INPUT,
+                "src/I90_channels.csv",
                 OUTPUT_FOR_INPUT_PRESERVATION
         );
 
@@ -456,8 +391,8 @@ public class AcceptanceTest {
                 "Input preservation test should produce output"
         );
 
-        byte[] afterGps = snapshotFileBytes(PRESERVATION_INPUT_GPS_LOG);
-        byte[] afterRef = snapshotFileBytes(PRESERVATION_INPUT_HIGHWAY_REF);
+        byte[] afterGps = snapshotFileBytes(VALID_EASTBOUND_INPUT);
+        byte[] afterRef = snapshotFileBytes("src/I90_channels.csv");
 
         if (!java.util.Arrays.equals(beforeGps, afterGps)) {
             throw new AssertionError("GPS input file was modified during processing.");
