@@ -311,8 +311,7 @@ public class AcceptanceTest {
     // - An error about missing highway match or unmatched location appears.
     // - Processing fails; OUTPUT_FOR_MISSING_HWY is NOT produced.
     private static void testMissingHighwayMatch() throws Exception {
-        String MISSING_HWY_INPUT = "C:\\Users\\aaliy\\OneDrive\\Documents\\School\\Software dev class\\Rust-eze\\test_csv\\AcceptanceTest_I80EBSacramento.csv";
-
+        String MISSING_HWY_INPUT = "test_csv/AcceptanceTest_I80EBSacramento.csv";
         deleteIfExists(OUTPUT_FOR_MISSING_HWY);
 
         RunResult result = runHiChan(
