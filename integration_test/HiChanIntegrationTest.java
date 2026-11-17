@@ -204,7 +204,7 @@ public class HiChanIntegrationTest {
             Files.writeString(tempGps, originalGps);
             String originalChannels = Files.readString(Path.of(preprocPath));
 
-            HiChan.main(new String[]{tempGps.toString(), "src/i90_channels.csv", tempOut.getPath()});
+            HiChan.main(new String[]{tempGps.toString(), preprocPath, tempOut.getPath()});
 
             assertTrue(tempOut.exists());
             assertEquals(originalGps, Files.readString(tempGps));

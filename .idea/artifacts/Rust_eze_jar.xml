@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Rust-eze:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Rust_eze_jar</output-path>
+    <root id="archive" name="Rust-eze.jar">
+      <element id="module-output" name="Rust-eze" />
+    </root>
+  </artifact>
+</component>
