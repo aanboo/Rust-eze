@@ -7,6 +7,7 @@ import java.util.Map;
 
 public class  HiChan {
     public static void main(String[] args) {
+
         if (args.length < 2 || args.length > 3) {
             System.out.println("Error: Please provide the GPS log file path and the preprocessed CSV as an argument.");
             return;
@@ -66,8 +67,8 @@ public class  HiChan {
             return;
         }
 
-        try{//Should we get overwrite authorization from the user or just overwrite it for now?
-            boolean authorize = true; //yes, I believe that was the original intent we wanted
+        try{
+            boolean authorize = true;
             File out = new File(outputPath);
             String response = "";
             if (out.exists()) {
@@ -95,6 +96,7 @@ public class  HiChan {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+
 
     }
 }
