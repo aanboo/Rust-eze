@@ -5,8 +5,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import java.lang.management.ManagementFactory;
+import com.sun.management.OperatingSystemMXBean;
+import java.lang.management.MemoryType;
+import java.lang.management.MemoryPoolMXBean;
+
 public class  HiChan {
-    public static void main(String[] args) {
+    public static void main(String[] args)throws InterruptedException {
+        Runtime runtime = Runtime.getRuntime();
+        OperatingSystemMXBean osBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
+
+
 
         if (args.length < 2 || args.length > 3) {
             System.out.println("Error: Please provide the GPS log file path and the preprocessed CSV as an argument.");
@@ -97,6 +106,25 @@ public class  HiChan {
             System.out.println(e.getMessage());
         }
 
+        long usedMemoryBytes = runtime.totalMemory() - runtime.freeMemory();
+        double usedMemoryMB = usedMemoryBytes / (1024.0 * 1024.0);
+
+        // 4. Get CPU Utilization (returns 0.0 to 1.0, or negative if not yet sampled)
+        double processCpuLoad = osBean.getProcessCpuLoad() * 100.0;
+
+        System.out.printf("Memory Consumed: %.2f MB%n", usedMemoryMB);
+        System.out.printf("Process CPU Utilization: %.2f%%%n", processCpuLoad);
+
+
+        long peakHeapBytes = 0;
+        for (MemoryPoolMXBean pool : ManagementFactory.getMemoryPoolMXBeans()) {
+            if (pool.getType() == MemoryType.HEAP) {
+                peakHeapBytes += pool.getPeakUsage().getUsed();
+            }
+        }
+
+        double peakHeapMB = peakHeapBytes / (1024.0 * 1024.0);
+        System.out.printf("Peak Heap Memory: %.2f MB%n", peakHeapMB);
 
     }
 }

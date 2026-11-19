@@ -3,13 +3,6 @@
   <component name="CsvFileAttributes">
     <option name="attributeMap">
       <map>
-        <entry key="C:\Users\aaliy\Downloads\AcceptanceTest_I80EBSacramento.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
         <entry key="\acceptance_test\OUTPUT_DUPLICATE_TIMESTAMPS.csv">
           <value>
             <Attribute>
@@ -38,20 +31,6 @@
             </Attribute>
           </value>
         </entry>
-        <entry key="\dsf\GPSLog_1.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
-        <entry key="\dsf\i90_channels.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
         <entry key="\out\production\Rust-eze\HiChan_Output.csv">
           <value>
             <Attribute>
@@ -67,20 +46,6 @@
           </value>
         </entry>
         <entry key="\out\test\Rust-eze\OUTPUT_VALID_WESTBOUND.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
-        <entry key="\output.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
-        <entry key="\src\AcceptanceTest_I80EBSacramento.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
@@ -137,13 +102,6 @@
           </value>
         </entry>
         <entry key="\test_csv\ExpectedOuputAccE.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
-        <entry key="\test_csv\ExpectedOuputAccW.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
